@@ -39,4 +39,4 @@ COPY --from=dist              /opt/app/dist         dist
 
 ENV CI_COMMIT_TAG=$CI_COMMIT_TAG
 ENV HOST=0.0.0.0
-CMD ["dist/index.js"]
+CMD ["dist/main.js"]
