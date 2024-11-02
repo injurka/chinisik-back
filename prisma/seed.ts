@@ -1,23 +1,19 @@
-import config from '~/utils/env-config.ts';
-import { Log, Logger, LogType } from '~/utils/logger.ts';
-import { Prisma, PrismaClient } from "~/prisma";
+import { PrismaClient } from '@prisma/client'
+import { type Log, Logger, LogType } from '~/utils/logger'
 
-interface SeedFile {
-  name: string
-  path: string
-}
+import { mockDescriptionHieroglyphKeys } from './data/content'
+import { mockHieroglyphKeys } from './data/hieroglyph-key'
+import { mockUser } from './data/user'
+import { mockUserPermission } from './data/userPermission'
 
-const seedFiles: SeedFile[] = [
-  { name: 'keys', path: 'sql/user.sql' },
+const seeds = [
+  { name: 'hieroglyphKey', data: [...mockHieroglyphKeys] },
+  { name: 'content', data: [mockDescriptionHieroglyphKeys] },
+  { name: 'user', data: [...mockUser] },
+  { name: 'userPermission', data: [...mockUserPermission] },
 ]
 
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: config.dbUrl,
-    },
-  },
-});
+const prisma = new PrismaClient()
 
 const logger = new Logger()
 
@@ -26,21 +22,19 @@ async function run() {
 
   logger.info('✨ Run seeds')
 
-  for (const seedFile of seedFiles) {
+  for (const seed of seeds) {
     try {
-      await prisma.$disconnect();
-
-      const sql: string = await Deno.readTextFile(seedFile.path);
-      const queries: string[] = sql.split(';')
-
-      for (const query of queries) {
-        logger.info(query)
+      for (const data of seed.data) {
+        // eslint-disable-next-line ts/ban-ts-comment
         // @ts-ignore
-        await Prisma.$executeRawUnsafe(query)
+        await prisma[seed.name].create({
+          data,
+        })
       }
-      seedsStatus.push({ type: LogType.Success, message: seedFile.name })
-    } catch {
-      seedsStatus.push({ type: LogType.Error, message: seedFile.name })
+      seedsStatus.push({ type: LogType.Success, message: seed.name })
+    }
+    catch (e) {
+      seedsStatus.push({ type: LogType.Error, message: `${seed.name} | ${e}` })
     }
   }
 
@@ -53,5 +47,5 @@ async function run() {
 
 run().catch((e) => {
   logger.error('❌ Seed', e)
-  Deno.exit(1)
+  process.exit(1)
 })

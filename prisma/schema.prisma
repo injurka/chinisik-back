@@ -1,16 +1,73 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["deno"]
-  output          = "../generated/client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model Dinosaur {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
-  description String
+//* ==== Models ==================================================================== *//
+
+model User {
+  id       Int    @id @unique @default(autoincrement())
+  email    String
+  name     String?
+  password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  UserPermission UserPermission[]
+
+  @@map(name: "user")
+}
+
+model UserPermission {
+  id         Int        @id @unique @default(autoincrement())
+  userId     Int
+  permission Permission
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map(name: "user_permission")
+}
+
+model EmailVerificationCode {
+  id        Int      @id @default(autoincrement())
+  email     String
+  code      String
+}
+
+model HieroglyphKey {
+  id            Int     @id @default(autoincrement())
+  index         Int     @unique
+  glyph         String
+  alternative   String?
+  pinyin        String
+  translate     String
+  transcription String
+  toneType      Int
+  toneIndex     Int
+
+  @@map(name: "hieroglyph_key")
+}
+
+model Content {
+  id      Int     @id @default(autoincrement())
+  sysname String? @unique
+  value   Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map(name: "content")
+}
+
+//* ==== Enums ==================================================================== *//
+
+enum Permission {
+  AiGenerate
 }

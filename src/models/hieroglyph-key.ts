@@ -3,10 +3,8 @@ type ToneType = 0 | 1 | 2 | 3 | 4
 interface HieroglyphKey {
   index?: number
   alternative?: string | null
-  tone: {
-    type: ToneType
-    index: number
-  }
+  toneType: ToneType
+  toneIndex: number
   pinyin: string
   glyph: string
   translate: string
@@ -14,6 +12,6 @@ interface HieroglyphKey {
 }
 
 export type {
+  HieroglyphKey,
   ToneType,
-  HieroglyphKey
-};
+}

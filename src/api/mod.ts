@@ -1,10 +1,23 @@
-import KeysController from '~/api/controllers/keys.ts'
-import { OpenAPIHono as Hono } from '@hono/zod-openapi'
+import type { OpenAPIHono as Hono } from '@hono/zod-openapi'
+
+import {
+  AuthController,
+  HieroglyphKeyController,
+  UserController,
+} from './controllers'
 
 const controllers = [
   {
     basePath: '/api/v1',
-    controller: new KeysController(),
+    controller: new AuthController(),
+  },
+  {
+    basePath: '/api/v1',
+    controller: new UserController(),
+  },
+  {
+    basePath: '/api/v1',
+    controller: new HieroglyphKeyController(),
   },
 ]
 
