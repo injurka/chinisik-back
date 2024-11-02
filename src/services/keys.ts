@@ -1,5 +1,6 @@
 // deno-lint-ignore-file require-await
-import { mockDescriptionHieroglyphKeys, mockHieroglyphKeys } from '../../prisma/data/keys.ts';
+import { mockHieroglyphKeys } from '../../prisma/data/keys.ts';
+import { mockDescriptionHieroglyphKeys } from '../../prisma/data/content.ts';
 
 class KeysService {
   //* Create

@@ -5,12 +5,71 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = "postgresql://chinisik:chinisik@localhost:5432/chinisik_dev"
+  relationMode = "prisma"
 }
 
-model Dinosaur {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
-  description String
+//* ==== Models ==================================================================== *//
+
+model User {
+  id       Int    @id @unique @default(autoincrement())
+  username String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  UserPermission UserPermission[]
+
+  @@map(name: "user")
+}
+
+model UserPermission {
+  id         Int        @id @unique @default(autoincrement())
+  userId     Int
+  permission Permission
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map(name: "user_permission")
+}
+
+model HieroglyphKey {
+  id          Int      @id @default(autoincrement())
+  index       Int      @unique
+  glyph       String
+  alternative String?
+  pinyin      String
+  translate   String
+  transcription String
+  tone        Tone     @relation(fields: [toneId], references: [id])
+  toneId      Int
+
+  @@map(name: "hieroglyph_key")
+}
+
+model Tone {
+  id    Int    @id @default(autoincrement())
+  type  Int
+  index Int
+  hieroglyphKeys HieroglyphKey[]
+
+  @@map(name: "tone")
+}
+
+
+model Content {
+  sysname  String    @id @unique
+  value    Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map(name: "content")
+}
+//* ==== Enums ==================================================================== *//
+
+enum Permission {
+  AiGenerate
 }
