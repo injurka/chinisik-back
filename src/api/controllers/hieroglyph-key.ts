@@ -2,7 +2,7 @@ import type { Context } from 'hono'
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
 import { HieroglyphKeyDescriptionSchema, HieroglyphKeySchema } from '~/models/hieroglyph-key.schema'
-import HieroglyphKeyService from '~/services/hieroglyph-key'
+import { HieroglyphKeyService } from '~/services'
 
 class HieroglyphKeyController extends AController {
   private service = new HieroglyphKeyService()
@@ -71,4 +71,4 @@ class HieroglyphKeyController extends AController {
   }
 }
 
-export default HieroglyphKeyController
+export { HieroglyphKeyController }

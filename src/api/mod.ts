@@ -1,15 +1,23 @@
 import type { OpenAPIHono as Hono } from '@hono/zod-openapi'
-import HieroglyphKeyController from '~/api/controllers/hieroglyph-key'
-import UserController from './controllers/user'
+
+import {
+  AuthController,
+  HieroglyphKeyController,
+  UserController,
+} from './controllers'
 
 const controllers = [
   {
     basePath: '/api/v1',
-    controller: new HieroglyphKeyController(),
+    controller: new AuthController(),
   },
   {
     basePath: '/api/v1',
     controller: new UserController(),
+  },
+  {
+    basePath: '/api/v1',
+    controller: new HieroglyphKeyController(),
   },
 ]
 

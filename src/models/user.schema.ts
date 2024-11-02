@@ -10,20 +10,7 @@ const UserSchema = z.object({
 
 const PermissionSchema = z.array(z.nativeEnum(Permission)).optional()
 
-const SignUpUserPayloadSchema = z.object({
-  email: z.string().email(),
-  email_verification_code: z.string(),
-  password: z.string().min(8).max(20),
-})
-
-const SignInUserPayloadSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8).max(20),
-})
-
 export {
   PermissionSchema,
-  SignInUserPayloadSchema,
-  SignUpUserPayloadSchema,
   UserSchema,
 }

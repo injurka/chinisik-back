@@ -21,4 +21,4 @@ class HieroglyphKeyService {
   //* Delete
 }
 
-export default HieroglyphKeyService
+export { HieroglyphKeyService }
