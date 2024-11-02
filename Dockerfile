@@ -3,7 +3,7 @@ FROM oven/bun AS node_modules
 
 WORKDIR /opt/app
 
-COPY ./source/package*.json ./source/bun* ./
+COPY ./package*.json ./bun* ./
 
 RUN bun install --ignore-scripts
 
@@ -12,7 +12,7 @@ FROM oven/bun AS node_modules_prod
 
 WORKDIR /opt/app
 
-COPY ./source/package*.json ./source/bun* ./
+COPY ./package*.json ./bun* ./
 
 RUN bun install --production --ignore-scripts
 
@@ -22,7 +22,7 @@ FROM oven/bun AS dist
 WORKDIR /opt/app
 
 COPY --from=node_modules /opt/app/node_modules node_modules
-COPY                     ./source              .
+COPY                     .                     .
 
 RUN bun run lint
 RUN bun run build
