@@ -34,3 +34,23 @@ docker run -p 5432:5432 \
 After launching, perform migrations and seeding of all data, this can be done by writing:
 
 - `bun run prisma:reset`
+
+## Build image and run
+
+### Build
+
+```
+docker buildx build -t chinisik-back .
+```
+
+### Run
+
+```
+docker run -d \
+  --name chinisik-back \
+  -p 8080:8080 \
+  -e PORT=8080 \
+  -e DATABASE_URL="postgresql://chinisik:chinisik@localhost:5432/chinisik_dev?schema=public" \
+  -e RESEND_API_KEY="-" \
+  chinisik-back
+```

@@ -13,8 +13,10 @@ FROM oven/bun AS node_modules_prod
 WORKDIR /opt/app
 
 COPY ./package*.json ./bun* ./
+COPY ./prisma        prisma
 
 RUN bun install --production --ignore-scripts
+RUN bun run prisma:generate
 
 # ---- Build ------------ #
 FROM oven/bun AS dist
@@ -28,7 +30,7 @@ RUN bun run lint
 RUN bun run build
 
 # ---- Release ---------- #
-FROM oven/bun:distroless
+FROM oven/bun:slim
 
 ARG CI_COMMIT_TAG
 
