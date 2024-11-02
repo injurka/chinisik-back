@@ -1,11 +1,11 @@
 import type { Context } from 'hono'
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
-import { HieroglyphKeyDescriptionSchema, HieroglyphKeySchema } from '~/models/keys.schema'
-import KeysService from '~/services/keys'
+import { HieroglyphKeyDescriptionSchema, HieroglyphKeySchema } from '~/models/hieroglyph-key.schema'
+import HieroglyphKeyService from '~/services/hieroglyph-key'
 
-class KeysController extends AController {
-  private service = new KeysService()
+class HieroglyphKeyController extends AController {
+  private service = new HieroglyphKeyService()
 
   constructor() {
     super('/keys')
@@ -31,14 +31,15 @@ class KeysController extends AController {
       },
     })
 
-    const handler = async (c: Context) => {
-      const data = await this.service.getKeys()
-      const validatedData = z.array(HieroglyphKeySchema).parse(data)
+    this.router.openapi(
+      route,
+      async (c) => {
+        const data = await this.service.getKeys()
+        const validatedData = z.array(HieroglyphKeySchema).parse(data)
 
-      return c.json(validatedData, 200)
-    }
-
-    this.router.openapi(route, handler)
+        return c.json(validatedData, 200)
+      },
+    )
   }
 
   private getDescription = () => {
@@ -58,15 +59,16 @@ class KeysController extends AController {
       },
     })
 
-    const handler = async (c: Context) => {
-      const data = await this.service.getDescription()
-      const validatedData = HieroglyphKeyDescriptionSchema.parse(data)
+    this.router.openapi(
+      route,
+      async (c: Context) => {
+        const data = await this.service.getDescription()
+        const validatedData = HieroglyphKeyDescriptionSchema.parse(data)
 
-      return c.json(validatedData, 200)
-    }
-
-    this.router.openapi(route, handler)
+        return c.json(validatedData, 200)
+      },
+    )
   }
 }
 
-export default KeysController
+export default HieroglyphKeyController

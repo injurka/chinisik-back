@@ -1,4 +1,5 @@
 import type { Context } from 'hono'
+import type { StatusCode } from 'hono/utils/http-status'
 import { OpenAPIHono as Hono } from '@hono/zod-openapi'
 import { serveStatic } from 'hono/bun'
 import { cors } from 'hono/cors'
@@ -31,18 +32,7 @@ class Server {
       this.server.use(prettyJSON())
       this.server.use(cors())
       this.server.use(prometheusMiddleware)
-      this.server.defaultHook = (result, c) => {
-        if (!result.success) {
-          return c.json(
-            {
-              ok: false,
-              errors: result,
-              source: 'custom_error_handler',
-            },
-            422,
-          )
-        }
-      }
+      this.server.onError((err, c) => c.json({ message: err.message }, c.res.status as StatusCode))
 
       logger.log('Middlewares')
     }

@@ -1,4 +1,4 @@
-import type { HieroglyphKey } from '~/models/keys'
+import type { HieroglyphKey } from '~/models/hieroglyph-key'
 
 export const mockHieroglyphKeys = [
   {

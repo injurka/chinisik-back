@@ -4,7 +4,9 @@ CREATE TYPE "Permission" AS ENUM ('AiGenerate');
 -- CreateTable
 CREATE TABLE "user" (
     "id" SERIAL NOT NULL,
-    "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "name" TEXT,
+    "password" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -29,28 +31,21 @@ CREATE TABLE "hieroglyph_key" (
     "pinyin" TEXT NOT NULL,
     "translate" TEXT NOT NULL,
     "transcription" TEXT NOT NULL,
-    "toneId" INTEGER NOT NULL,
+    "toneType" INTEGER NOT NULL,
+    "toneIndex" INTEGER NOT NULL,
 
     CONSTRAINT "hieroglyph_key_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "tone" (
-    "id" SERIAL NOT NULL,
-    "type" INTEGER NOT NULL,
-    "index" INTEGER NOT NULL,
-
-    CONSTRAINT "tone_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "content" (
-    "sysname" TEXT NOT NULL,
-    "value" JSONB NOT NULL,
+    "id" SERIAL NOT NULL,
+    "sysname" TEXT,
+    "value" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "content_pkey" PRIMARY KEY ("sysname")
+    CONSTRAINT "content_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -64,9 +59,6 @@ CREATE INDEX "user_permission_userId_idx" ON "user_permission"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "hieroglyph_key_index_key" ON "hieroglyph_key"("index");
-
--- CreateIndex
-CREATE INDEX "hieroglyph_key_toneId_idx" ON "hieroglyph_key"("toneId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "content_sysname_key" ON "content"("sysname");
