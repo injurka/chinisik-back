@@ -24,7 +24,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'post',
       path: `${this.path}/sign-up`,
-      tags: ['user'],
+      tags: ['auth'],
       request: {
         body: {
           content: {
@@ -62,7 +62,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'post',
       path: `${this.path}/sign-in`,
-      tags: ['user'],
+      tags: ['auth'],
       request: {
         body: {
           content: {
@@ -99,7 +99,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'post',
       path: `${this.path}/send-verification-code`,
-      tags: ['user'],
+      tags: ['auth'],
       request: {
         body: {
           content: {
