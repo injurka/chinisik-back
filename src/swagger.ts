@@ -1,6 +1,6 @@
-import { OpenAPIHono as Hono } from '@hono/zod-openapi'
+import type { OpenAPIHono as Hono } from '@hono/zod-openapi'
+import type { Context } from 'hono'
 import { SwaggerUI } from '@hono/swagger-ui'
-import { Context } from '@hono/hono';
 
 function setupSwagger(server: Hono) {
   server.get('/swagger', (c: Context) => {
@@ -138,15 +138,14 @@ function setupSwagger(server: Hono) {
       }
       </style>
         </head>
-        ${SwaggerUI({ url: "/doc" })}
+        ${SwaggerUI({ url: '/doc' })}
       </html>
-    `);
+    `)
   })
   server.doc('/doc', {
     info: { title: 'Chinisik API', version: 'v1' },
-    openapi: '3.1.0'
+    openapi: '3.1.0',
   })
-
 }
 
 export default setupSwagger

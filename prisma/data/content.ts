@@ -1,6 +1,6 @@
-import type { JsonToDomChildren } from '~/models/shared.ts'
+import type { JsonToDomChildren } from '~/models/shared'
 
-export const mockDescriptionHieroglyphKeys = {
+export const mockDescriptionHieroglyphKeys = [{
   sysname: 'keys',
   value: {
     tag: 'div',
@@ -121,5 +121,5 @@ export const mockDescriptionHieroglyphKeys = {
         }],
       },
     ],
-  } satisfies JsonToDomChildren
-} 
+  } satisfies JsonToDomChildren,
+}]

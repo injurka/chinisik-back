@@ -1,7 +1,8 @@
-import Server from '~/server.ts'
+import Server from './server'
 
-if (import.meta.main) {
-  const app = Server.getServer()
+const app = Server.getServer()
 
-  Deno.serve(app.fetch)
+export default {
+  port: import.meta.env.PORT,
+  fetch: app.fetch,
 }

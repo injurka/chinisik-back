@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // deno-lint-ignore-file no-explicit-any
 
 export enum LogType {

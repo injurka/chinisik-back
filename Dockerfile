@@ -1,11 +1,42 @@
-FROM denoland/deno:alpine
+# ---- Node modules ----- #
+FROM oven/bun AS node_modules
 
 WORKDIR /opt/app
 
-COPY . .
+COPY ./source/package*.json ./source/bun* ./
 
-RUN deno lint
-RUN deno check ./src/main.ts
-RUN deno install --allow-scripts --entrypoint ./src/main.ts
+RUN bun install --ignore-scripts
 
-CMD [ "deno", "run", "--allow-all", "./src/main.ts" ]
+# ---- Node modules production ----- #
+FROM oven/bun AS node_modules_prod
+
+WORKDIR /opt/app
+
+COPY ./source/package*.json ./source/bun* ./
+
+RUN bun install --production --ignore-scripts
+
+# ---- Build ------------ #
+FROM oven/bun AS dist
+
+WORKDIR /opt/app
+
+COPY --from=node_modules /opt/app/node_modules node_modules
+COPY                     ./source              .
+
+RUN bun run lint
+RUN bun run build
+
+# ---- Release ---------- #
+FROM oven/bun:distroless
+
+ARG CI_COMMIT_TAG
+
+WORKDIR /opt/app
+
+COPY --from=node_modules_prod /opt/app/node_modules node_modules
+COPY --from=dist              /opt/app/dist         dist
+
+ENV CI_COMMIT_TAG=$CI_COMMIT_TAG
+ENV HOST=0.0.0.0
+CMD ["dist/index.js"]

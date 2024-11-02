@@ -66,10 +66,7 @@ CREATE INDEX "user_permission_userId_idx" ON "user_permission"("userId");
 CREATE UNIQUE INDEX "hieroglyph_key_index_key" ON "hieroglyph_key"("index");
 
 -- CreateIndex
+CREATE INDEX "hieroglyph_key_toneId_idx" ON "hieroglyph_key"("toneId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "content_sysname_key" ON "content"("sysname");
-
--- AddForeignKey
-ALTER TABLE "user_permission" ADD CONSTRAINT "user_permission_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "hieroglyph_key" ADD CONSTRAINT "hieroglyph_key_toneId_fkey" FOREIGN KEY ("toneId") REFERENCES "tone"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

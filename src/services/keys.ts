@@ -1,6 +1,6 @@
+import { mockDescriptionHieroglyphKeys } from '../../prisma/data/content'
 // deno-lint-ignore-file require-await
-import { mockHieroglyphKeys } from '../../prisma/data/keys.ts';
-import { mockDescriptionHieroglyphKeys } from '../../prisma/data/content.ts';
+import { mockHieroglyphKeys } from '../../prisma/data/keys'
 
 class KeysService {
   //* Create
@@ -9,12 +9,12 @@ class KeysService {
   getKeys = async () => {
     return mockHieroglyphKeys
   }
+
   getDescription = async () => {
     return mockDescriptionHieroglyphKeys
   }
 
   //* Update
-
 
   //* Delete
 }

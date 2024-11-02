@@ -1,5 +1,5 @@
-import KeysController from '~/api/controllers/keys.ts'
-import { OpenAPIHono as Hono } from '@hono/zod-openapi'
+import type { OpenAPIHono as Hono } from '@hono/zod-openapi'
+import KeysController from '~/api/controllers/keys'
 
 const controllers = [
   {
