@@ -35,6 +35,12 @@ model UserPermission {
   @@map(name: "user_permission")
 }
 
+model EmailVerificationCode {
+  id        Int      @id @default(autoincrement())
+  email     String
+  code      String
+}
+
 model HieroglyphKey {
   id            Int     @id @default(autoincrement())
   index         Int     @unique

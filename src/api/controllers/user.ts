@@ -14,8 +14,12 @@ class UserController extends AController {
   constructor() {
     super('/user')
 
+    // Auth
     this.signUp()
     this.signIn()
+    this.sendVerificationCode()
+
+    // Base
     this.getById()
     this.getPermissionsByUserId()
   }
@@ -91,6 +95,41 @@ class UserController extends AController {
         const data = await this.service.signIn(body)
 
         return c.json(UserSchema.parse(data), 200)
+      },
+    )
+  }
+
+  private sendVerificationCode = () => {
+    const route = createRoute({
+      method: 'post',
+      path: `${this.path}/send-verification-code`,
+      tags: ['user'],
+      request: {
+        body: {
+          content: {
+            'application/json': {
+              schema: z.object({
+                email: z.string().email(),
+              }),
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Verification code sent',
+        },
+      },
+    })
+
+    this.router.openapi(
+      route,
+      async (c) => {
+        const { email } = c.req.valid('json')
+
+        await this.service.createVerificationCode(email)
+
+        return c.text('Verification code sent', 200)
       },
     )
   }
