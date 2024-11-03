@@ -3,6 +3,7 @@ import type { OpenAPIHono as Hono } from '@hono/zod-openapi'
 import {
   AuthController,
   HieroglyphKeyController,
+  LlvmController,
   UserController,
 } from './controllers'
 
@@ -18,6 +19,10 @@ const controllers = [
   {
     basePath: '/api/v1',
     controller: new HieroglyphKeyController(),
+  },
+  {
+    basePath: '/api/v1',
+    controller: new LlvmController(),
   },
 ]
 

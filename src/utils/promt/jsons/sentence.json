@@ -1,0 +1,183 @@
+{
+  "type": "sentence",
+  "glyph": "打电话",
+  "pinyin": [
+    {
+      "value": "dǎ",
+      "toneType": 3,
+      "toneIndex": 0
+    },
+    {
+      "value": "diàn",
+      "toneType": 4,
+      "toneIndex": 1
+    },
+    {
+      "value": "huà",
+      "toneType": 4,
+      "toneIndex": 2
+    }
+  ],
+  "translate": "позвонить по телефону",
+  "transcription": "да диан хуа",
+  "components": [
+    {
+      "type": "hieroglyph",
+      "glyph": "打",
+      "pinyin": {
+        "value": "dǎ",
+        "toneType": 3,
+        "toneIndex": 0
+      },
+      "translate": [
+        {
+          "pos": "verb",
+          "value": "звонить",
+          "freq": 0.8
+        },
+        {
+          "pos": "verb",
+          "value": "бить",
+          "freq": 0.5
+        }
+      ],
+      "transcription": "да",
+      "components": [
+        {
+          "type": "key",
+          "glyph": "扌",
+          "pinyin": {
+            "value": "shǒu",
+            "toneType": 3,
+            "toneIndex": 0
+          },
+          "translate": "рука",
+          "transcription": "шоу"
+        },
+        {
+          "type": "key",
+          "glyph": "丁",
+          "pinyin": {
+            "value": "dīng",
+            "toneType": 1,
+            "toneIndex": 0
+          },
+          "translate": "гвоздь",
+          "transcription": "дин"
+        }
+      ]
+    },
+    {
+      "type": "word",
+      "glyph": "电话",
+      "pinyin": [
+        {
+          "value": "diàn",
+          "toneType": 4,
+          "toneIndex": 1
+        },
+        {
+          "value": "huà",
+          "toneType": 4,
+          "toneIndex": 2
+        }
+      ],
+      "translate": "телефон",
+      "transcription": "диан хуа",
+      "components": [
+        {
+          "type": "hieroglyph",
+          "glyph": "电",
+          "pinyin": {
+            "value": "diàn",
+            "toneType": 4,
+            "toneIndex": 0
+          },
+          "translate": [
+            {
+              "pos": "noun",
+              "value": "телефон",
+              "freq": 0.9
+            },
+            {
+              "pos": "noun",
+              "value": "электричество",
+              "freq": 0.7
+            }
+          ],
+          "transcription": "диан",
+          "components": [
+            {
+              "type": "key",
+              "glyph": "曰",
+              "pinyin": {
+                "value": "yuē",
+                "toneType": 1,
+                "toneIndex": 0
+              },
+              "translate": "говорить",
+              "transcription": "юэ"
+            },
+            {
+              "type": "key",
+              "glyph": "乚",
+              "pinyin": {
+                "value": "yǐ",
+                "toneType": 3,
+                "toneIndex": 0
+              },
+              "translate": "крючок",
+              "transcription": "и"
+            }
+          ]
+        },
+        {
+          "type": "hieroglyph",
+          "glyph": "话",
+          "pinyin": {
+            "value": "huà",
+            "toneType": 4,
+            "toneIndex": 0
+          },
+          "translate": [
+            {
+              "pos": "noun",
+              "value": "разговор",
+              "freq": 0.9
+            },
+            {
+              "pos": "noun",
+              "value": "речь",
+              "freq": 0.8
+            }
+          ],
+          "transcription": "хуа",
+          "components": [
+            {
+              "type": "key",
+              "glyph": "讠",
+              "pinyin": {
+                "value": "yán",
+                "toneType": 2,
+                "toneIndex": 0
+              },
+              "translate": "речь",
+              "transcription": "янь"
+            },
+            {
+              "type": "key",
+              "glyph": "舌",
+              "pinyin": {
+                "value": "shé",
+                "toneType": 2,
+                "toneIndex": 0
+              },
+              "translate": "язык",
+              "transcription": "ше"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
