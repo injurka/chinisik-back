@@ -1,0 +1,26 @@
+[
+  {
+    "type": "hieroglyph",
+    "glyph": "打",
+    "pinyin": "dǎ",
+    "toneType": 3,
+    "toneIndex": 0,
+    "translate": [
+      {
+        "pos": "verb",
+        "value": "звонить",
+        "freq": 0.8
+      },
+      {
+        "pos": "verb",
+        "value": "бить",
+        "freq": 0.5
+      }
+    ],
+    "transcription": "да",
+    "keys": [
+      "扌",
+      "丁"
+    ]
+  }
+]

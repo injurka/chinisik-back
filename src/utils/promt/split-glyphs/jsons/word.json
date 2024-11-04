@@ -1,0 +1,62 @@
+[
+  {
+    "type": "word",
+    "glyph": "你好",
+    "pinyin": [
+      {
+        "value": "nǐ",
+        "toneType": 3,
+        "toneIndex": 0
+      },
+      {
+        "value": "hǎo",
+        "toneType": 3,
+        "toneIndex": 0
+      }
+    ],
+    "translate": "привет",
+    "transcription": "ни хао",
+    "components": [
+      "你",
+      "好"
+    ]
+  },
+  {
+    "type": "hieroglyph",
+    "glyph": "你",
+    "pinyin": "nǐ",
+    "toneType": 3,
+    "toneIndex": 0,
+    "translate": [
+      {
+        "pos": "pronoun",
+        "value": "ты",
+        "freq": 1.0
+      }
+    ],
+    "transcription": "ни",
+    "components": [
+      "亻",
+      "尔"
+    ]
+  },
+  {
+    "type": "hieroglyph",
+    "glyph": "好",
+    "pinyin": "hǎo",
+    "toneType": 3,
+    "toneIndex": 0,
+    "translate": [
+      {
+        "pos": "adverb",
+        "value": "хорошо",
+        "freq": 1.0
+      }
+    ],
+    "transcription": "хао",
+    "components": [
+      "女",
+      "子"
+    ]
+  }
+]

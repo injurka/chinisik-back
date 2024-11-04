@@ -43,7 +43,7 @@ model EmailVerificationCode {
 
 model HieroglyphKey {
   id            Int     @id @default(autoincrement())
-  index         Int     @unique
+  index         Int     
   glyph         String
   alternative   String?
   pinyin        String
@@ -57,13 +57,110 @@ model HieroglyphKey {
 
 model Content {
   id      Int     @id @default(autoincrement())
-  sysname String? @unique
+  sysname String?  @unique
   value   Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   @@map(name: "content")
+}
+
+//* ==== SplitGlyphs ==================================================================== *//
+
+model SplitGlyphsAll {
+  id            Int      @id @unique @default(autoincrement())
+  type          String
+  glyph         String  
+  data          Json
+
+  @@map(name: "split_glyphs_all")
+}
+
+model SplitGlyphsHieroglyph {
+  id            Int      @id @unique @default(autoincrement())
+  glyph         String   @unique
+  pinyin        String
+  toneType      Int
+  toneIndex     Int
+  transcription String
+  translate     Json
+
+  keys          SplitGlyphsHieroglyphKeys[]
+  words         SplitGlyphsWordHieroglyphs[]
+  sentences     SplitGlyphsSentenceHieroglyphs[]
+}
+
+model SplitGlyphsHieroglyphKeys {
+  id            Int      @id @unique @default(autoincrement())
+  order         Int
+  hieroglyphId  Int
+  keyId         Int
+
+  hieroglyph    SplitGlyphsHieroglyph @relation(fields: [hieroglyphId], references: [id])
+
+  @@index([hieroglyphId])
+}
+
+model SplitGlyphsWord {
+  id            Int      @id @unique @default(autoincrement())
+  glyph         String   @unique
+  translate     String
+  transcription String
+  pinyin        Json
+
+  hieroglyphs   SplitGlyphsWordHieroglyphs[]
+  sentences     SplitGlyphsSentenceWords[]
+}
+
+model SplitGlyphsWordHieroglyphs {
+  id            Int      @id @unique @default(autoincrement())
+  order         Int
+  hieroglyphId  Int
+  wordId        Int
+
+  hieroglyph    SplitGlyphsHieroglyph @relation(fields: [hieroglyphId], references: [id])
+  word          SplitGlyphsWord @relation(fields: [wordId], references: [id])
+
+  @@index([hieroglyphId])
+  @@index([wordId])
+}
+
+model SplitGlyphsSentence {
+  id            Int      @id @unique @default(autoincrement())
+  glyph         String   @unique
+  translate     String
+  transcription String
+  pinyin        Json
+
+  words         SplitGlyphsSentenceWords[]
+  hieroglyphs   SplitGlyphsSentenceHieroglyphs[]
+}
+
+model SplitGlyphsSentenceWords {
+  id            Int      @id @unique @default(autoincrement())
+  order         Int
+  sentenceId    Int
+  wordId        Int
+
+  sentence      SplitGlyphsSentence @relation(fields: [sentenceId], references: [id])
+  word          SplitGlyphsWord @relation(fields: [wordId], references: [id])
+
+  @@index([sentenceId])
+  @@index([wordId])
+}
+
+model SplitGlyphsSentenceHieroglyphs {
+  id            Int      @id @unique @default(autoincrement())
+  order         Int
+  sentenceId    Int
+  hieroglyphId  Int
+
+  sentence      SplitGlyphsSentence @relation(fields: [sentenceId], references: [id])
+  hieroglyph    SplitGlyphsHieroglyph @relation(fields: [hieroglyphId], references: [id])
+
+  @@index([sentenceId])
+  @@index([hieroglyphId])
 }
 
 //* ==== Enums ==================================================================== *//

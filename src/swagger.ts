@@ -40,6 +40,10 @@ function setupSwagger(server: Hono) {
         color: var(--primary-color);
       }
 
+      .parameters-col_description input {
+        color: var(--button-bg-color) !important;
+      }
+      
       .execute {
         color: var(--bg-color) !important;
         background-color: var(--primary-color) !important;

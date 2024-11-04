@@ -3,14 +3,16 @@ import { type Log, Logger, LogType } from '~/utils/logger'
 
 import { mockDescriptionHieroglyphKeys } from './data/content'
 import { mockHieroglyphKeys } from './data/hieroglyph-key'
+import { splitGlyphsAll } from './data/split-glyphs-all'
 import { mockUser } from './data/user'
-import { mockUserPermission } from './data/userPermission'
+import { mockUserPermission } from './data/user-permission'
 
 const seeds = [
   { name: 'hieroglyphKey', data: [...mockHieroglyphKeys] },
-  { name: 'content', data: [mockDescriptionHieroglyphKeys] },
+  { name: 'content', data: [...mockDescriptionHieroglyphKeys] },
   { name: 'user', data: [...mockUser] },
   { name: 'userPermission', data: [...mockUserPermission] },
+  { name: 'splitGlyphsAll', data: [...splitGlyphsAll] },
 ]
 
 const prisma = new PrismaClient()

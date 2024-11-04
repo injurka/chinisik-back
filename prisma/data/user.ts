@@ -1,3 +1,5 @@
 export const mockUser = [{
-  username: 'test',
+  name: 'test',
+  email: 'test@test.test',
+  password: 'test',
 }]

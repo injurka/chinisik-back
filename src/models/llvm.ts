@@ -1,4 +1,4 @@
-type SplitGlyphsType = 'sentence' | 'word' | 'hieroglyph'
+import type { SplitGlyphsType } from './splited-glyphs'
 
 interface SplitGlyphsPayload {
   type: SplitGlyphsType
@@ -7,5 +7,4 @@ interface SplitGlyphsPayload {
 
 export type {
   SplitGlyphsPayload,
-  SplitGlyphsType,
 }
