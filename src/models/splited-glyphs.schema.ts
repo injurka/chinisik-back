@@ -41,10 +41,15 @@ const WordSchema = z.object({
   components: z.array(z.string()),
 })
 
+const SplitedGlyphsSchema = z.array(
+  z.union([SentenceSchema, HieroglyphSchema, WordSchema]),
+)
+
 export {
   HieroglyphSchema,
   PinyinSchema,
   SentenceSchema,
+  SplitedGlyphsSchema,
   TranslateSchema,
   WordSchema,
 }

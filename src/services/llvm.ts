@@ -1,9 +1,8 @@
 import type { InputJsonObject } from '@prisma/client/runtime/library'
-import { z } from '@hono/zod-openapi'
 import { HTTPException } from 'hono/http-exception'
 import type { SplitGlyphsPayload } from '~/models/llvm'
 import type { SplitGlyphsHieroglyph, SplitGlyphsSentence, SplitGlyphsWord } from '~/models/splited-glyphs'
-import { HieroglyphSchema, SentenceSchema, WordSchema } from '~/models/splited-glyphs.schema'
+import { SplitedGlyphsSchema } from '~/models/splited-glyphs.schema'
 import { prisma } from '~/prisma'
 import { createAiRequest } from '~/utils/deep-seek'
 import { getPromt } from '~/utils/promt'
@@ -31,9 +30,7 @@ class LlvmService {
 
       const data = JSON.parse(rawData)
 
-      const validatedData = z.array(
-        z.union([SentenceSchema, HieroglyphSchema, WordSchema]),
-      ).parse(data)
+      const validatedData = SplitedGlyphsSchema.parse(data)
 
       await prisma.splitGlyphsAll.create({
         data: {

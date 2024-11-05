@@ -1,6 +1,7 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
 import type { SplitGlyphsPayload } from '~/models/llvm'
+import { SplitedGlyphsSchema } from '~/models/splited-glyphs.schema'
 import { LlvmService } from '~/services'
 
 class LlvmController extends AController {
@@ -29,8 +30,7 @@ class LlvmController extends AController {
         200: {
           content: {
             'application/json': {
-              schema: z.any(),
-              // TODO SpliteGlyphsSchema,
+              schema: SplitedGlyphsSchema,
             },
           },
           description: 'Split glyphs',
@@ -45,7 +45,7 @@ class LlvmController extends AController {
 
         const data = await this.service.splitGlyphs(params)
 
-        return c.json(z.any().parse(data), 200)
+        return c.json(SplitedGlyphsSchema.parse(data), 200)
       },
     )
   }
