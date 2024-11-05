@@ -1,4 +1,5 @@
 import type { $Enums, Prisma } from '@prisma/client'
+import type { User } from '~/models/user'
 import { prisma } from '~/prisma'
 import type { IUpdatePayload, IWherePayload } from '~/types/prisma-helpers'
 
@@ -16,6 +17,19 @@ class UserService {
 
   getByWhere = async <T>(payload: IWherePayload<T, Prisma.UserWhereInput>) => {
     return prisma.user.findFirstOrThrow({ ...payload.query, where: payload.where })
+  }
+
+  getUserByUserId = async (userId: number) => {
+    const data = await prisma.user.findFirstOrThrow({ where: { id: userId } })
+    const user = {
+      id: data.id,
+      email: data.email,
+      name: data.name,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    } as User
+
+    return user
   }
 
   getPermissionsByUserId = async (userId: number): Promise<$Enums.Permission[]> => {

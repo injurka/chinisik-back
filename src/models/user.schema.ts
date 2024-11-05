@@ -3,7 +3,7 @@ import { Permission } from './user'
 
 const UserSchema = z.object({
   id: z.number().int(),
-  username: z.string(),
+  name: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })

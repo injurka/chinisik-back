@@ -146,9 +146,11 @@ function setupSwagger(server: Hono) {
       </html>
     `)
   })
+
   server.doc('/doc', {
     info: { title: 'Chinisik API', version: 'v1' },
     openapi: '3.1.0',
+    security: [{ bearerAuth: [] }],
   })
 }
 

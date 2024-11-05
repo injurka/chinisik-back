@@ -1,9 +1,7 @@
 interface User {
-  id: string
-
+  id: number
   email: string
-  username?: string
-
+  name?: string
   createdAt: Date
   updatedAt: Date
 }
@@ -11,7 +9,11 @@ interface User {
 export enum Permission {
   AiGenerate = 'AiGenerate',
 }
+const permissions: Permission[] = [Permission.AiGenerate]
 
+export {
+  permissions,
+}
 export type {
   User,
 }

@@ -1,5 +1,4 @@
 import { z } from '@hono/zod-openapi'
-import { JsonToDomElementSchema } from '~/models/shared.schema'
 
 const ToneTypeSchema = z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3), z.literal(4)])
 
@@ -14,12 +13,6 @@ const HieroglyphKeySchema = z.object({
   transcription: z.string().optional(),
 })
 
-const HieroglyphKeyDescriptionSchema = z.object({
-  sysname: z.string(),
-  value: JsonToDomElementSchema,
-})
-
 export {
-  HieroglyphKeyDescriptionSchema,
   HieroglyphKeySchema,
 }

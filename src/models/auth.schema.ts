@@ -1,4 +1,10 @@
 import { z } from '@hono/zod-openapi'
+import { UserSchema } from './user.schema'
+
+const AuthUserSchema = z.object({
+  token: z.string(),
+  user: UserSchema,
+})
 
 const SignUpUserPayloadSchema = z.object({
   email: z.string().email(),
@@ -12,6 +18,7 @@ const SignInUserPayloadSchema = z.object({
 })
 
 export {
+  AuthUserSchema,
   SignInUserPayloadSchema,
   SignUpUserPayloadSchema,
 }

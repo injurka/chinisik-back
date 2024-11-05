@@ -1,12 +1,11 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
+import { jwtGuard } from '~/middleware'
 import {
+  AuthUserSchema,
   SignInUserPayloadSchema,
   SignUpUserPayloadSchema,
 } from '~/models/auth.schema'
-import {
-  UserSchema,
-} from '~/models/user.schema'
 import { AuthService } from '~/services'
 
 class AuthController extends AController {
@@ -15,9 +14,48 @@ class AuthController extends AController {
   constructor() {
     super('/auth')
 
+    this.auth()
     this.signUp()
     this.signIn()
     this.sendVerificationCode()
+  }
+
+  private auth = () => {
+    const route = createRoute({
+      method: 'get',
+      path: `${this.path}/`,
+      tags: ['auth'],
+      request: {
+        headers: z.object({ 'x-authorizaition': z.string() }),
+      },
+      security: [{ bearerAuth: [] }],
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              schema: AuthUserSchema,
+            },
+          },
+          description: 'Create the user',
+        },
+      },
+    })
+
+    this.router.use(route.path, jwtGuard)
+    this.router.openapi(
+      route,
+      async (c) => {
+        const user = c.get('user')
+        const token = c.get('token')
+
+        const data = {
+          user,
+          token,
+        }
+
+        return c.json(AuthUserSchema.parse(data), 200)
+      },
+    )
   }
 
   private signUp = () => {
@@ -38,7 +76,7 @@ class AuthController extends AController {
         200: {
           content: {
             'application/json': {
-              schema: UserSchema,
+              schema: AuthUserSchema,
             },
           },
           description: 'Create the user',
@@ -53,7 +91,7 @@ class AuthController extends AController {
 
         const data = await this.service.signUp(body)
 
-        return c.json(UserSchema.parse(data), 200)
+        return c.json(AuthUserSchema.parse(data), 200)
       },
     )
   }
@@ -76,7 +114,7 @@ class AuthController extends AController {
         200: {
           content: {
             'application/json': {
-              schema: UserSchema,
+              schema: AuthUserSchema,
             },
           },
           description: 'Auth user',
@@ -90,7 +128,7 @@ class AuthController extends AController {
         const body = c.req.valid('json')
         const data = await this.service.signIn(body)
 
-        return c.json(UserSchema.parse(data), 200)
+        return c.json(AuthUserSchema.parse(data), 200)
       },
     )
   }

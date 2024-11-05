@@ -8,11 +8,11 @@ import { mockUser } from './data/user'
 import { mockUserPermission } from './data/user-permission'
 
 const seeds = [
-  { name: 'hieroglyphKey', data: [...mockHieroglyphKeys] },
-  { name: 'content', data: [...mockDescriptionHieroglyphKeys] },
-  { name: 'user', data: [...mockUser] },
-  { name: 'userPermission', data: [...mockUserPermission] },
-  { name: 'splitGlyphsAll', data: [...splitGlyphsAll] },
+  { name: 'user', data: [mockUser] },
+  { name: 'hieroglyphKey', data: [mockHieroglyphKeys] },
+  { name: 'content', data: [mockDescriptionHieroglyphKeys] },
+  { name: 'userPermission', data: [mockUserPermission] },
+  { name: 'splitGlyphsAll', data: [splitGlyphsAll] },
 ]
 
 const prisma = new PrismaClient()
@@ -26,12 +26,15 @@ async function run() {
 
   for (const seed of seeds) {
     try {
-      for (const data of seed.data) {
-        // eslint-disable-next-line ts/ban-ts-comment
-        // @ts-ignore
-        await prisma[seed.name].create({
-          data,
-        })
+      for (const rawData of seed.data) {
+        const transformedData = [...await rawData()]
+        for (const data of transformedData) {
+          // eslint-disable-next-line ts/ban-ts-comment
+          // @ts-ignore
+          await prisma[seed.name].create({
+            data,
+          })
+        }
       }
       seedsStatus.push({ type: LogType.Success, message: seed.name })
     }

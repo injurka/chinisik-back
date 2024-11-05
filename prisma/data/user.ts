@@ -1,5 +1,7 @@
-export const mockUser = [{
-  name: 'test',
-  email: 'test@test.test',
-  password: 'test',
-}]
+export async function mockUser() {
+  return [{
+    name: 'test',
+    email: 'test@test.test',
+    password: await Bun.password.hash('testtesttest'),
+  }]
+}
