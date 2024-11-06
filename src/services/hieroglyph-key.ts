@@ -8,14 +8,6 @@ class HieroglyphKeyService {
     return prisma.hieroglyphKey.findMany()
   }
 
-  getDescription = async () => {
-    return prisma.content.findFirst({
-      where: {
-        sysname: 'keys',
-      },
-    })
-  }
-
   //* Update
 
   //* Delete

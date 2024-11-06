@@ -1,4 +1,4 @@
-import { createRoute } from '@hono/zod-openapi'
+import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
 
 import { CmsDescriptionSchema } from '~/models/cms.schema'
@@ -16,8 +16,20 @@ class CmsController extends AController {
   private getContent = () => {
     const route = createRoute({
       method: 'get',
-      path: `${this.path}/description`,
+      path: `${this.path}/description/{sysname}`,
       tags: ['cms'],
+      request: {
+        params: z.object({
+          sysname: z
+            .string()
+            .openapi({
+              param: {
+                name: 'sysname',
+                in: 'path',
+              },
+            }),
+        }),
+      },
       responses: {
         200: {
           content: {
@@ -33,7 +45,9 @@ class CmsController extends AController {
     this.router.openapi(
       route,
       async (c) => {
-        const data = await this.service.getContent()
+        const { sysname } = c.req.valid('param')
+
+        const data = await this.service.getContent(sysname)
         const validatedData = CmsDescriptionSchema.parse(data)
 
         return c.json(validatedData, 200)

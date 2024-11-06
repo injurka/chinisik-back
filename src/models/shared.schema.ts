@@ -7,4 +7,6 @@ const JsonToDomElementSchema = z.object({
   props: z.record(z.unknown()).optional(),
 })
 
-export { JsonToDomElementSchema }
+export {
+  JsonToDomElementSchema,
+}

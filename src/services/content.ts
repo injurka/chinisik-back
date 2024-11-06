@@ -4,13 +4,14 @@ class CmsService {
   //* Create
 
   //* Read
-
-  getContent = async () => {
-    return prisma.content.findFirst({
+  getContent = async (sysname: string) => {
+    const data = await prisma.cms.findFirstOrThrow({
       where: {
-        sysname: 'keys',
+        sysname,
       },
     })
+
+    return data.value
   }
 
   //* Update

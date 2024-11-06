@@ -1,18 +1,28 @@
 import { PrismaClient } from '@prisma/client'
 import { type Log, Logger, LogType } from '~/utils/logger'
 
-import { mockDescriptionHieroglyphKeys } from './data/content'
+import { mockCms } from './data/cms'
 import { mockHieroglyphKeys } from './data/hieroglyph-key'
-import { splitGlyphsAll } from './data/split-glyphs-all'
+import { mockFinals, mockFinalsTone, mockInitials, mockInitialsFinals } from './data/pinyin'
+import { mockSplitGlyphsAll } from './data/split-glyphs-all'
 import { mockUser } from './data/user'
 import { mockUserPermission } from './data/user-permission'
 
 const seeds = [
-  { name: 'user', data: [mockUser] },
+  // Keys
   { name: 'hieroglyphKey', data: [mockHieroglyphKeys] },
-  { name: 'content', data: [mockDescriptionHieroglyphKeys] },
+  // Content
+  { name: 'cms', data: [mockCms] },
+  // User
+  { name: 'user', data: [mockUser] },
   { name: 'userPermission', data: [mockUserPermission] },
-  { name: 'splitGlyphsAll', data: [splitGlyphsAll] },
+  // Llvm
+  { name: 'splitGlyphsAll', data: [mockSplitGlyphsAll] },
+  // Pinyin
+  { name: 'pinyinFinal', data: [mockFinals] },
+  { name: 'pinyinInitial', data: [mockInitials] },
+  { name: 'pinyinFinalsTone', data: [mockFinalsTone] },
+  { name: 'pinyinInitialsFinals', data: [mockInitialsFinals] },
 ]
 
 const prisma = new PrismaClient()

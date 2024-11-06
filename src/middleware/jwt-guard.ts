@@ -3,7 +3,7 @@ import { verify } from 'hono/jwt'
 import { UserService } from '~/services'
 
 async function jwtGuard(c: Context, next: Next) {
-  const authHeader = c.req.header('x-authorizaition')
+  const authHeader = c.req.header('x-authorizaition') ?? c.req.header('Authorizaition')
 
   if (!authHeader) {
     return c.json({ message: 'Authorization header missing' }, 401)

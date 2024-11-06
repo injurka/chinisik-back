@@ -5,6 +5,7 @@ import {
   CmsController,
   HieroglyphKeyController,
   LlvmController,
+  PinyinController,
   UserController,
 } from './controllers'
 
@@ -28,6 +29,10 @@ const controllers = [
   {
     basePath: '/api/v1',
     controller: new CmsController(),
+  },
+  {
+    basePath: '/api/v1',
+    controller: new PinyinController(),
   },
 ]
 

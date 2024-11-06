@@ -1,4 +1,4 @@
-function splitGlyphsAll() {
+function mockSplitGlyphsAll() {
   return [{
     glyph: '如果',
     type: 'word',
@@ -58,4 +58,4 @@ function splitGlyphsAll() {
   }]
 }
 
-export { splitGlyphsAll }
+export { mockSplitGlyphsAll }

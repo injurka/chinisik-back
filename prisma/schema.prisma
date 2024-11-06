@@ -11,7 +11,7 @@ datasource db {
 //* ==== Models ==================================================================== *//
 
 model User {
-  id       Int    @id @unique @default(autoincrement())
+  id       Int     @id @unique @default(autoincrement())
   email    String
   name     String?
   password String
@@ -36,14 +36,14 @@ model UserPermission {
 }
 
 model EmailVerificationCode {
-  id        Int      @id @default(autoincrement())
-  email     String
-  code      String
+  id    Int    @id @default(autoincrement())
+  email String
+  code  String
 }
 
 model HieroglyphKey {
   id            Int     @id @default(autoincrement())
-  index         Int     
+  index         Int
   glyph         String
   alternative   String?
   pinyin        String
@@ -55,113 +55,171 @@ model HieroglyphKey {
   @@map(name: "hieroglyph_key")
 }
 
-model Content {
+model Cms {
   id      Int     @id @default(autoincrement())
-  sysname String?  @unique
+  sysname String? @unique
   value   Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  @@map(name: "content")
+  @@map(name: "cms")
 }
 
 //* ==== SplitGlyphs ==================================================================== *//
 
 model SplitGlyphsAll {
-  id            Int      @id @unique @default(autoincrement())
-  type          String
-  glyph         String  
-  data          Json
+  id    Int    @id @unique @default(autoincrement())
+  type  String
+  glyph String
+  data  Json
 
   @@map(name: "split_glyphs_all")
 }
 
 model SplitGlyphsHieroglyph {
-  id            Int      @id @unique @default(autoincrement())
-  glyph         String   @unique
+  id            Int    @id @unique @default(autoincrement())
+  glyph         String @unique
   pinyin        String
   toneType      Int
   toneIndex     Int
   transcription String
   translate     Json
 
-  keys          SplitGlyphsHieroglyphKeys[]
-  words         SplitGlyphsWordHieroglyphs[]
-  sentences     SplitGlyphsSentenceHieroglyphs[]
+  keys      SplitGlyphsHieroglyphKeys[]
+  words     SplitGlyphsWordHieroglyphs[]
+  sentences SplitGlyphsSentenceHieroglyphs[]
+
+  @@map(name: "split_glyphs_hieroglyph")
 }
 
 model SplitGlyphsHieroglyphKeys {
-  id            Int      @id @unique @default(autoincrement())
-  order         Int
-  hieroglyphId  Int
-  keyId         Int
+  id           Int @id @unique @default(autoincrement())
+  order        Int
+  hieroglyphId Int
+  keyId        Int
 
-  hieroglyph    SplitGlyphsHieroglyph @relation(fields: [hieroglyphId], references: [id])
+  hieroglyph SplitGlyphsHieroglyph @relation(fields: [hieroglyphId], references: [id])
 
   @@index([hieroglyphId])
+  @@map(name: "split_glyphs_keys")
 }
 
 model SplitGlyphsWord {
-  id            Int      @id @unique @default(autoincrement())
-  glyph         String   @unique
+  id            Int    @id @unique @default(autoincrement())
+  glyph         String @unique
   translate     String
   transcription String
   pinyin        Json
 
-  hieroglyphs   SplitGlyphsWordHieroglyphs[]
-  sentences     SplitGlyphsSentenceWords[]
+  hieroglyphs SplitGlyphsWordHieroglyphs[]
+  sentences   SplitGlyphsSentenceWords[]
+  @@map(name: "split_glyphs_word")
 }
 
 model SplitGlyphsWordHieroglyphs {
-  id            Int      @id @unique @default(autoincrement())
-  order         Int
-  hieroglyphId  Int
-  wordId        Int
+  id           Int @id @unique @default(autoincrement())
+  order        Int
+  hieroglyphId Int
+  wordId       Int
 
-  hieroglyph    SplitGlyphsHieroglyph @relation(fields: [hieroglyphId], references: [id])
-  word          SplitGlyphsWord @relation(fields: [wordId], references: [id])
+  hieroglyph SplitGlyphsHieroglyph @relation(fields: [hieroglyphId], references: [id])
+  word       SplitGlyphsWord       @relation(fields: [wordId], references: [id])
 
   @@index([hieroglyphId])
   @@index([wordId])
+  @@map(name: "split_glyphs_word_hieroglyph")
 }
 
 model SplitGlyphsSentence {
-  id            Int      @id @unique @default(autoincrement())
-  glyph         String   @unique
+  id            Int    @id @unique @default(autoincrement())
+  glyph         String @unique
   translate     String
   transcription String
   pinyin        Json
 
-  words         SplitGlyphsSentenceWords[]
-  hieroglyphs   SplitGlyphsSentenceHieroglyphs[]
+  words       SplitGlyphsSentenceWords[]
+  hieroglyphs SplitGlyphsSentenceHieroglyphs[]
+
+  @@map(name: "split_glyphs_sentence")
 }
 
 model SplitGlyphsSentenceWords {
-  id            Int      @id @unique @default(autoincrement())
-  order         Int
-  sentenceId    Int
-  wordId        Int
+  id         Int @id @unique @default(autoincrement())
+  order      Int
+  sentenceId Int
+  wordId     Int
 
-  sentence      SplitGlyphsSentence @relation(fields: [sentenceId], references: [id])
-  word          SplitGlyphsWord @relation(fields: [wordId], references: [id])
+  sentence SplitGlyphsSentence @relation(fields: [sentenceId], references: [id])
+  word     SplitGlyphsWord     @relation(fields: [wordId], references: [id])
 
   @@index([sentenceId])
   @@index([wordId])
+  @@map(name: "split_glyphs_words")
 }
 
 model SplitGlyphsSentenceHieroglyphs {
-  id            Int      @id @unique @default(autoincrement())
-  order         Int
-  sentenceId    Int
-  hieroglyphId  Int
+  id           Int @id @unique @default(autoincrement())
+  order        Int
+  sentenceId   Int
+  hieroglyphId Int
 
-  sentence      SplitGlyphsSentence @relation(fields: [sentenceId], references: [id])
-  hieroglyph    SplitGlyphsHieroglyph @relation(fields: [hieroglyphId], references: [id])
+  sentence   SplitGlyphsSentence   @relation(fields: [sentenceId], references: [id])
+  hieroglyph SplitGlyphsHieroglyph @relation(fields: [hieroglyphId], references: [id])
 
   @@index([sentenceId])
   @@index([hieroglyphId])
+  @@map(name: "split_glyphs_sentence_hieroglyphs")
 }
+
+//* ==== Pinyin ==================================================================== *//
+
+model PinyinFinal {
+  id   Int    @id @default(autoincrement())
+  name String
+  pos  Int
+
+  finalsTones PinyinFinalsTone[]
+
+  @@map(name: "pinyin_final")
+}
+
+model PinyinInitial {
+  id   Int    @id @default(autoincrement())
+  name String
+  pos  Int
+
+  initialsFinals PinyinInitialsFinals[]
+  
+  @@map(name: "pinyin_initial")
+}
+
+model PinyinFinalsTone {
+  id       Int    @id @default(autoincrement())
+  name     String
+  toneType Int // Assuming ToneType is mapped to Int in Prisma
+  finalId  Int
+
+  final          PinyinFinal            @relation(fields: [finalId], references: [id])
+  initialsFinals PinyinInitialsFinals[]
+
+  @@index([finalId])
+  @@map(name: "pinyin_finals_tone")
+}
+
+model PinyinInitialsFinals {
+  id          Int  @id @default(autoincrement())
+  initialId   Int?
+  finalToneId Int
+
+  initial   PinyinInitial?   @relation(fields: [initialId], references: [id])
+  finalTone PinyinFinalsTone @relation(fields: [finalToneId], references: [id])
+
+  @@index([finalToneId])
+  @@index([initialId])
+  @@map(name: "pinyin_initial_finals")
+}
+
 
 //* ==== Enums ==================================================================== *//
 
