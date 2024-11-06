@@ -2,7 +2,7 @@ import OpenAI from 'openai'
 
 const openai = new OpenAI({
   baseURL: 'https://api.deepseek.com',
-  apiKey: process.env.DEPP_SEEK,
+  apiKey: process.env.DEEP_SEEK_KEY,
 })
 
 function createAiRequest(systemPromt: string, userPromt: string) {

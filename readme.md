@@ -51,6 +51,8 @@ docker run -d \
   -p 8080:8080 \
   -e PORT=8080 \
   -e DATABASE_URL="postgresql://chinisik:chinisik@localhost:5432/chinisik_dev?schema=public" \
+  -e DEEP_SEEK_KEY="-" \
   -e RESEND_API_KEY="-" \
+  -e JWT_SECRET="-" \
   chinisik-back
 ```
