@@ -4,17 +4,17 @@
     "glyph": "打电话",
     "pinyin": [
       {
-        "value": "dǎ",
+        "value": "da",
         "toneType": 3,
-        "toneIndex": 0
-      },
-      {
-        "value": "diàn",
-        "toneType": 4,
         "toneIndex": 1
       },
       {
-        "value": "huà",
+        "value": "dian",
+        "toneType": 4,
+        "toneIndex": 2
+      },
+      {
+        "value": "hua",
         "toneType": 4,
         "toneIndex": 2
       }
@@ -29,9 +29,9 @@
   {
     "type": "hieroglyph",
     "glyph": "打",
-    "pinyin": "dǎ",
+    "pinyin": "da",
     "toneType": 3,
-    "toneIndex": 0,
+    "toneIndex": 1,
     "translate": [
       {
         "pos": "verb",
@@ -55,12 +55,12 @@
     "glyph": "电话",
     "pinyin": [
       {
-        "value": "diàn",
+        "value": "dian",
         "toneType": 4,
-        "toneIndex": 1
+        "toneIndex": 2
       },
       {
-        "value": "huà",
+        "value": "hua",
         "toneType": 4,
         "toneIndex": 2
       }
@@ -75,9 +75,9 @@
   {
     "type": "hieroglyph",
     "glyph": "电",
-    "pinyin": "diàn",
+    "pinyin": "dian",
     "toneType": 4,
-    "toneIndex": 0,
+    "toneIndex": 2,
     "translate": [
       {
         "pos": "noun",
@@ -99,9 +99,9 @@
   {
     "type": "hieroglyph",
     "glyph": "话",
-    "pinyin": "huà",
+    "pinyin": "hua",
     "toneType": 4,
-    "toneIndex": 0,
+    "toneIndex": 2,
     "translate": [
       {
         "pos": "noun",
