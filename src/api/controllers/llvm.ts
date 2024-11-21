@@ -17,7 +17,7 @@ class LlvmController extends AController {
   private splitGlyphs = () => {
     const QuerySchema = z.object({
       type: z.enum(['sentence', 'word', 'hieroglyph']).default('word'),
-      word: z.string(),
+      glyphs: z.string(),
     })
 
     const route = createRoute({

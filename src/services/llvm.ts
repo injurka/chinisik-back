@@ -13,7 +13,7 @@ class LlvmService {
 
     const savedData = await prisma.splitGlyphsAll.findFirst({
       where: {
-        glyph: params.word,
+        glyph: params.glyphs,
       },
     })
 

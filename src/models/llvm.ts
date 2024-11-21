@@ -2,7 +2,7 @@ import type { SplitGlyphsType } from './splited-glyphs'
 
 interface SplitGlyphsPayload {
   type: SplitGlyphsType
-  word: string
+  glyphs: string
 }
 
 export type {

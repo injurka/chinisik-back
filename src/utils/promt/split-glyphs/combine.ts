@@ -5,6 +5,7 @@ import type { SplitGlyphsType } from '~/models/splited-glyphs'
 import hieroglyphJSON from './jsons/hieroglyph.json'
 import sentenceJSON from './jsons/sentence.json'
 import wordJSON from './jsons/word.json'
+import { modelDescription } from './model-description'
 
 const splitGlyphsType: Record<SplitGlyphsType, unknown> = {
   hieroglyph: hieroglyphJSON,
@@ -18,6 +19,7 @@ function getPromt(params: SplitGlyphsPayload) {
   const system = `
   The user will provide some hieroglyphs. Split the following set of hieroglyphs into its components:
 
+
   EXAMPLE INPUT:
   ${(example as { glyph: string }).glyph}
 
@@ -26,11 +28,14 @@ function getPromt(params: SplitGlyphsPayload) {
   ${JSON.stringify(example)}
   \`\`\`
 
+  DATA MODEL DESCRIPTION:
+  ${modelDescription}
+
   Minify result JSON. The output must also be an array of objects.
   `
 
   const user = `
-  ${params.word}
+  ${params.glyphs}
   `
 
   return { system, user }
