@@ -1,7 +1,7 @@
 import type { InputJsonObject } from '@prisma/client/runtime/library'
-import { HTTPException } from 'hono/http-exception'
 import type { SplitGlyphsPayload } from '~/models/llvm'
 import type { SplitGlyphsHieroglyph, SplitGlyphsSentence, SplitGlyphsWord } from '~/models/splited-glyphs'
+import { HTTPException } from 'hono/http-exception'
 import { SplitedGlyphsSchema } from '~/models/splited-glyphs.schema'
 import { prisma } from '~/prisma'
 import { createAiRequest } from '~/utils/deep-seek'
@@ -9,8 +9,6 @@ import { getPromt } from '~/utils/promt'
 
 class LlvmService {
   splitGlyphs = async (params: SplitGlyphsPayload) => {
-    const { system, user } = getPromt(params)
-
     const savedData = await prisma.splitGlyphsAll.findFirst({
       where: {
         glyph: params.glyphs,
@@ -20,15 +18,17 @@ class LlvmService {
     if (savedData)
       return savedData
 
+    const { system, user } = getPromt(params)
     const response = await createAiRequest(system, user)
-
     const rawData = response.choices[0].message.content
 
     try {
       if (!rawData)
-        throw new Error('Failed to generate contente')
+        throw new Error('Failed to generate content.')
 
-      const data = JSON.parse(rawData)
+      let data = JSON.parse(rawData)
+      if (!Array.isArray(data))
+        data = [data]
 
       const validatedData = SplitedGlyphsSchema.parse(data)
 
@@ -65,7 +65,7 @@ class LlvmService {
       return validatedData
     }
     catch {
-      throw new HTTPException(400, { message: 'Failed to generate contente' })
+      throw new HTTPException(400, { message: 'Failed to generate content.' })
     }
   }
 

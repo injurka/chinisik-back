@@ -26,7 +26,7 @@ class AuthController extends AController {
       path: `${this.path}/`,
       tags: ['auth'],
       request: {
-        headers: z.object({ 'x-authorizaition': z.string() }),
+        headers: z.object({ 'x-authorization': z.string() }),
       },
       security: [{ bearerAuth: [] }],
       responses: {

@@ -42,7 +42,11 @@ const WordSchema = z.object({
 })
 
 const SplitedGlyphsSchema = z.array(
-  z.union([SentenceSchema, HieroglyphSchema, WordSchema]),
+  z.union([
+    SentenceSchema,
+    HieroglyphSchema,
+    WordSchema,
+  ]),
 )
 
 export {

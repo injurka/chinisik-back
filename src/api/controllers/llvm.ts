@@ -1,9 +1,9 @@
+import type { SplitGlyphsPayload } from '~/models/llvm'
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
-import { jwtGuard } from '~/middleware'
-import type { SplitGlyphsPayload } from '~/models/llvm'
 import { SplitedGlyphsSchema } from '~/models/splited-glyphs.schema'
 import { LlvmService } from '~/services'
+// import { jwtGuard } from '~/middleware'
 
 class LlvmController extends AController {
   private service = new LlvmService()
@@ -26,7 +26,7 @@ class LlvmController extends AController {
       tags: ['llvm'],
       request: {
         query: QuerySchema,
-        headers: z.object({ 'x-authorizaition': z.string() }),
+        // headers: z.object({ 'x-authorization': z.string() }),
       },
       responses: {
         200: {
@@ -40,12 +40,12 @@ class LlvmController extends AController {
       },
     })
 
-    this.router.use(route.path, jwtGuard)
+    // TODO later
+    // this.router.use(route.path, jwtGuard)
     this.router.openapi(
       route,
       async (c) => {
         const params = QuerySchema.parse(c.req.query()) satisfies SplitGlyphsPayload
-
         const data = await this.service.splitGlyphs(params)
 
         return c.json(SplitedGlyphsSchema.parse(data), 200)

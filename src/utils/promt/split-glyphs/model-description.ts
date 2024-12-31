@@ -1,7 +1,7 @@
 const modelDescription = `
 # Common fields for all element types:
 
-  1. type:
+1. type:
 - Description: The type of the element.Can be "sentence", "hieroglyph", or "word".
    - Example: "sentence", "hieroglyph", "word".
 
@@ -70,16 +70,21 @@ const modelDescription = `
   - pinyin: An array of objects, each containing the Pinyin value, tone type, and tone index.
   - components: An array of hieroglyphs that make up the sentence.
 
+- For "word":
+  - pinyin: An array of objects, each containing the Pinyin value, tone type, and tone index.
+  - components: An array of hieroglyphs that make up the word.
+
 - For "hieroglyph":
   - pinyin: A string representing the Pinyin of the hieroglyph.
   - toneType: The tone type of the hieroglyph.
   - toneIndex: The tone index of the hieroglyph.
   - translate: An array of objects, each containing the part of speech (\`pos\`), the translation value (\`value\`), and the frequency of use (\`freq\`).
-  - components: An array of hieroglyphs that make up this hieroglyph (if it is compound).
+  - components: An array of hieroglyphs that make up this hieroglyph (if it is compound). It is important that these should be hieroglyphs from the set of 214 keys of the Kan xi dictionary.
 
-- For "word":
-  - pinyin: An array of objects, each containing the Pinyin value, tone type, and tone index.
-  - components: An array of hieroglyphs that make up the word.
+# Filling extra conditions
+
+If the type is a \`sentence\`, then its components must have elements with type: \`word\` in the final json.
+If the type is a \`word\`, then its components must have elements with type: \`hieroglyph\` in the final json.
 `
 
 export { modelDescription }

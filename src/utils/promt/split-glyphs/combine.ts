@@ -19,7 +19,6 @@ function getPromt(params: SplitGlyphsPayload) {
   const system = `
   The user will provide some hieroglyphs. Split the following set of hieroglyphs into its components:
 
-
   EXAMPLE INPUT:
   ${(example as { glyph: string }).glyph}
 
@@ -31,7 +30,8 @@ function getPromt(params: SplitGlyphsPayload) {
   DATA MODEL DESCRIPTION:
   ${modelDescription}
 
-  Minify result JSON. The output must also be an array of objects.
+  RESPONSE FORMAT:
+  The output must also be an array of objects. \`[...]\`
   `
 
   const user = `

@@ -1,7 +1,7 @@
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
+  baseURL: 'https://api.deepseek.com/beta',
   apiKey: process.env.DEEP_SEEK_KEY,
 })
 
@@ -16,7 +16,7 @@ function createAiRequest(systemPromt: string, userPromt: string) {
       type: 'json_object',
     },
     stream: false,
-    temperature: 1.3,
+    temperature: 0.8,
   })
 }
 
