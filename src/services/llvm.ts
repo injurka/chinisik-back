@@ -1,7 +1,7 @@
 import type { InputJsonObject } from '@prisma/client/runtime/library'
+import { HTTPException } from 'hono/http-exception'
 import type { SplitGlyphsPayload } from '~/models/llvm'
 import type { SplitGlyphsHieroglyph, SplitGlyphsSentence, SplitGlyphsWord } from '~/models/splited-glyphs'
-import { HTTPException } from 'hono/http-exception'
 import { SplitedGlyphsSchema } from '~/models/splited-glyphs.schema'
 import { prisma } from '~/prisma'
 import { createAiRequest } from '~/utils/deep-seek'
@@ -9,63 +9,67 @@ import { getPromt } from '~/utils/promt'
 
 class LlvmService {
   splitGlyphs = async (params: SplitGlyphsPayload) => {
-    const savedData = await prisma.splitGlyphsAll.findFirst({
-      where: {
-        glyph: params.glyphs,
-      },
-    })
-
-    if (savedData)
-      return savedData
+    // Not needed
+    // const savedData = await prisma.splitGlyphsAll.findFirst({
+    //   where: {
+    //     glyph: params.glyphs,
+    //   },
+    // })
+    // if (savedData)
+    //   return savedData
 
     const { system, user } = getPromt(params)
     const response = await createAiRequest(system, user)
-    const rawData = response.choices[0].message.content
 
     try {
+      const rawData = response.choices[0].message.content
+
       if (!rawData)
         throw new Error('Failed to generate content.')
 
       let data = JSON.parse(rawData)
-      if (!Array.isArray(data))
+      if (!Array.isArray(data)) {
         data = [data]
+      }
 
       const validatedData = SplitedGlyphsSchema.parse(data)
 
-      await prisma.splitGlyphsAll.create({
-        data: {
-          glyph: validatedData[0].glyph,
-          type: validatedData[0].type,
-          data: validatedData,
-        },
-      })
+      // Not needed actually
+      try {
+        prisma.splitGlyphsAll.create({
+          data: {
+            glyph: validatedData[0].glyph,
+            type: validatedData[0].type,
+            data: validatedData,
+          },
+        })
+        const variants = ['hieroglyph', 'word', 'sentence']
+        for (const variant of variants) {
+          for (const item of data) {
+            if (item.type !== variant) {
+              continue
+            }
 
-      const variants = ['hieroglyph', 'word', 'sentence']
-
-      for (const variant of variants) {
-        for (const item of data) {
-          if (item.type !== variant) {
-            continue
-          }
-
-          switch (variant) {
-            case 'sentence':
-              await this.saveSentence(item)
-              break
-            case 'hieroglyph':
-              await this.saveHieroglyph(item)
-              break
-            case 'word':
-              await this.saveWord(item)
-              break
+            switch (variant) {
+              case 'sentence':
+                await this.saveSentence(item)
+                break
+              case 'hieroglyph':
+                await this.saveHieroglyph(item)
+                break
+              case 'word':
+                await this.saveWord(item)
+                break
+            }
           }
         }
       }
+      catch { }
 
       return validatedData
     }
     catch {
-      throw new HTTPException(400, { message: 'Failed to generate content.' })
+      throw new HTTPException(400, { message: 'Failed to format generated content.' })
     }
   }
 

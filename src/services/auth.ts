@@ -1,6 +1,6 @@
-import { sign } from 'hono/jwt'
 import type { SignInUserPayload, SignUpUserPayload } from '~/models/auth'
 import type { User } from '~/models/user'
+import { sign } from 'hono/jwt'
 import { prisma } from '~/prisma'
 import { sendVerificationCode } from '~/utils/email'
 
