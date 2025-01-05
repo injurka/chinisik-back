@@ -1,7 +1,7 @@
 import type { InputJsonObject } from '@prisma/client/runtime/library'
-import { HTTPException } from 'hono/http-exception'
 import type { SplitGlyphsPayload } from '~/models/llvm'
 import type { SplitGlyphsHieroglyph, SplitGlyphsSentence, SplitGlyphsWord } from '~/models/splited-glyphs'
+import { HTTPException } from 'hono/http-exception'
 import { SplitedGlyphsSchema } from '~/models/splited-glyphs.schema'
 import { prisma } from '~/prisma'
 import { createAiRequest } from '~/utils/deep-seek'
