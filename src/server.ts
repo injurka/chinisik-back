@@ -62,9 +62,9 @@ class Server {
   private initializeStaticFileRoutes() {
     try {
       this.server.use(
-        '*',
+        '/static/*',
         serveStatic({
-          root: './static',
+          root: '.',
           precompressed: true,
           onFound: (_path, c) => {
             c.header('Cache-Control', `public, immutable, max-age=31536000`)

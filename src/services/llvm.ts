@@ -70,10 +70,6 @@ class LlvmService {
       return validatedData
     }
     catch (err) {
-      let data = JSON.parse(rawData ?? '{}')
-      if (!Array.isArray(data))
-        data = [data]
-
       const errMsg = `Failed to format generated content. ${err}`
       logger.error(errMsg, rawData)
       throw new HTTPException(400, { message: errMsg })
