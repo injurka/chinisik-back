@@ -22,31 +22,48 @@ class LlvmService {
 
     const { system, user } = getPromt(params)
     const response = await createAiRequest(system, user)
-    const rawData = response.choices[0].message.content
+    const rawData = response.choices[0].message.content?.trim()
 
     try {
       if (!rawData)
-        throw new Error('Failed to generate content.')
+        throw new Error('_', { cause: 'Failed to generate content.' })
 
-      let data = JSON.parse(rawData)
-      if (!Array.isArray(data)) {
-        data = [data]
-      }
-
-      const validatedData = SplitedGlyphsSchema.parse(data)
+      const formatedRawData = rawData.startsWith('{') ? `[${rawData}]` : rawData
+      const parsedData = JSON.parse(formatedRawData)
+      const validatedData = SplitedGlyphsSchema.parse(parsedData)
 
       // Not needed actually
       try {
-        prisma.splitGlyphsAll.create({
-          data: {
+        const existingRecord = await prisma.splitGlyphsAll.findFirst({
+          where: {
             glyph: validatedData[0].glyph,
-            type: validatedData[0].type,
-            data: validatedData,
           },
         })
+
+        if (existingRecord) {
+          await prisma.splitGlyphsAll.update({
+            where: {
+              id: existingRecord.id,
+            },
+            data: {
+              type: validatedData[0].type,
+              data: validatedData,
+            },
+          })
+        }
+        else {
+          await prisma.splitGlyphsAll.create({
+            data: {
+              glyph: validatedData[0].glyph,
+              type: validatedData[0].type,
+              data: validatedData,
+            },
+          })
+        }
+
         const variants = ['hieroglyph', 'word', 'sentence']
         for (const variant of variants) {
-          for (const item of data) {
+          for (const item of parsedData) {
             if (item.type !== variant) {
               continue
             }

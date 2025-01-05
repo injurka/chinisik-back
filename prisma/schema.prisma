@@ -74,6 +74,9 @@ model SplitGlyphsAll {
   glyph String
   data  Json
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
   @@map(name: "split_glyphs_all")
 }
 
@@ -89,6 +92,7 @@ model SplitGlyphsHieroglyph {
   keys      SplitGlyphsHieroglyphKeys[]
   words     SplitGlyphsWordHieroglyphs[]
   sentences SplitGlyphsSentenceHieroglyphs[]
+
 
   @@map(name: "split_glyphs_hieroglyph")
 }

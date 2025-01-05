@@ -29,9 +29,6 @@ function getPromt(params: SplitGlyphsPayload) {
 
   DATA MODEL DESCRIPTION:
   ${modelDescription}
-
-  RESPONSE FORMAT:
-  The output must also be an array of objects. \`[...]\`
   `
 
   const user = `
