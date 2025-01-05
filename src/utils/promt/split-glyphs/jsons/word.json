@@ -4,12 +4,12 @@
     "glyph": "你好",
     "pinyin": [
       {
-        "value": "nǐ",
+        "value": "ni",
         "toneType": 3,
         "toneIndex": 0
       },
       {
-        "value": "hǎo",
+        "value": "hao",
         "toneType": 3,
         "toneIndex": 0
       }
@@ -24,7 +24,7 @@
   {
     "type": "hieroglyph",
     "glyph": "你",
-    "pinyin": "nǐ",
+    "pinyin": "ni",
     "toneType": 3,
     "toneIndex": 0,
     "translate": [
@@ -43,7 +43,7 @@
   {
     "type": "hieroglyph",
     "glyph": "好",
-    "pinyin": "hǎo",
+    "pinyin": "hao",
     "toneType": 3,
     "toneIndex": 0,
     "translate": [

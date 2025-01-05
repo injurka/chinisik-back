@@ -1,9 +1,10 @@
 import type { InputJsonObject } from '@prisma/client/runtime/library'
+import { HTTPException } from 'hono/http-exception'
 import type { SplitGlyphsPayload } from '~/models/llvm'
 import type { SplitGlyphsHieroglyph, SplitGlyphsSentence, SplitGlyphsWord } from '~/models/splited-glyphs'
-import { HTTPException } from 'hono/http-exception'
 import { SplitedGlyphsSchema } from '~/models/splited-glyphs.schema'
 import { prisma } from '~/prisma'
+import { logger } from '~/server'
 import { createAiRequest } from '~/utils/deep-seek'
 import { getPromt } from '~/utils/promt'
 
@@ -20,10 +21,9 @@ class LlvmService {
 
     const { system, user } = getPromt(params)
     const response = await createAiRequest(system, user)
+    const rawData = response.choices[0].message.content
 
     try {
-      const rawData = response.choices[0].message.content
-
       if (!rawData)
         throw new Error('Failed to generate content.')
 
@@ -68,8 +68,10 @@ class LlvmService {
 
       return validatedData
     }
-    catch {
-      throw new HTTPException(400, { message: 'Failed to format generated content.' })
+    catch (err) {
+      const errMsg = `Failed to format generated content. ${err}`
+      logger.error(errMsg, rawData)
+      throw new HTTPException(400, { message: errMsg })
     }
   }
 

@@ -42,11 +42,12 @@ class Server {
 
   private initializeRestControllers() {
     try {
+      this.server.get('/healthz', (c: Context): Response => c.text('healthy', 200))
+      this.server.get('/logs', (c: Context): Response => c.json(logger.logs, 200))
       this.server.get('/metrics', async (c: Context): Promise<Response> => {
         c.set('Content-Type', 'text/plain; version=0.0.4')
         return c.text(await register.metrics(), 200)
       })
-      this.server.get('/healthz', (c: Context): Response => c.text('healthy', 200))
 
       setupSwagger(this.server)
       setupRoutes(this.server)
@@ -84,4 +85,5 @@ class Server {
 
 const server = new Server()
 
+export { logger }
 export default server
