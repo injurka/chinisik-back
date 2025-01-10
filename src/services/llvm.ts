@@ -1,4 +1,3 @@
-/* eslint-disable perfectionist/sort-imports */
 import type { InputJsonObject } from '@prisma/client/runtime/library'
 import type { SplitGlyphsPayload } from '~/models/llvm'
 import type { SplitGlyphsHieroglyph, SplitGlyphsSentence, SplitGlyphsWord } from '~/models/splited-glyphs'
