@@ -24,6 +24,10 @@ async function jwtGuard(c: Context, next: Next) {
     const user = await userService.getUserByUserId(decoded.userId)
     const userPermissions = await userService.getPermissionsByUserId(user.id)
 
+    if (!user) {
+      return c.json({ message: 'Invalid user' }, 401)
+    }
+
     c.set('jwt', token)
     c.set('user', user)
     c.set('permissions', userPermissions)

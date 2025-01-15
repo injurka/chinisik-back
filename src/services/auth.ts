@@ -33,12 +33,6 @@ class AuthService {
       throw new Error('Invalid password')
     }
 
-    const secret = process.env.JWT_SECRET!
-    const jwtPayload = {
-      sub: user.id,
-      // exp: Math.floor(Date.now() / 1000) + 60 * 5, // Token expires in 5 minutes
-    }
-    const token = await sign(jwtPayload, secret)
     const transformedUser = {
       id: user.id,
       email: user.email,
@@ -46,6 +40,14 @@ class AuthService {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     } as User
+
+    const secret = process.env.JWT_SECRET!
+    const jwtPayload = {
+      sub: user.id,
+      user: transformedUser,
+      // exp: Math.floor(Date.now() / 1000) + 60 * 5, // Token expires in 5 minutes
+    }
+    const token = await sign(jwtPayload, secret)
 
     return { token, user: transformedUser }
   }
