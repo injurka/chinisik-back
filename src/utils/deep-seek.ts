@@ -16,7 +16,7 @@ function createAiRequest(systemPromt: string, userPromt: string) {
       type: 'json_object',
     },
     stream: false,
-    temperature: 0.8,
+    temperature: 1.0,
   })
 }
 

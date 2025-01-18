@@ -1,4 +1,4 @@
-import type { InitialsFinals } from '~/models/pinyin'
+import type { InitialsFinals } from '~/models/pinyin/pinyin'
 
 export function mockInitialsFinals() {
   return [

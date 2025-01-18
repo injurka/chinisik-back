@@ -1,6 +1,6 @@
 import type { SplitGlyphsPayload } from '~/models/llvm'
 
-import type { SplitGlyphsType } from '~/models/splited-glyphs'
+import type { SplitGlyphsType } from '~/models/llvm/splited-glyphs'
 
 import hieroglyphJSON from './jsons/hieroglyph.json'
 import sentenceJSON from './jsons/sentence.json'

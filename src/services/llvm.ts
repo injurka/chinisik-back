@@ -1,14 +1,15 @@
 import type { InputJsonObject } from '@prisma/client/runtime/library'
-import type { SplitGlyphsPayload } from '~/models/llvm'
-import type { SplitGlyphsHieroglyph, SplitGlyphsSentence, SplitGlyphsWord } from '~/models/splited-glyphs'
+import type { PinyinHieroglyphsPayload, SplitGlyphsHieroglyph, SplitGlyphsPayload, SplitGlyphsSentence, SplitGlyphsWord } from '~/models/llvm'
 import { HTTPException } from 'hono/http-exception'
-import { SplitedGlyphsSchema } from '~/models/splited-glyphs.schema'
+import { PinyinHieroglyphsSchema, SplitedGlyphsSchema } from '~/models/llvm'
 import { prisma } from '~/prisma'
 import { logger } from '~/server'
 import { createAiRequest } from '~/utils/deep-seek'
-import { getPromt } from '~/utils/promt'
+import { getPromt as getPinyinHieroglyphsPromt } from '~/utils/promt/pinyin-hieroglyphs'
+import { getPromt as getSplitGlyphsPromt } from '~/utils/promt/split-glyphs'
 
 class LlvmService {
+  // SplitGlyphs
   splitGlyphs = async (params: SplitGlyphsPayload) => {
     // Not needed
     // const savedData = await prisma.splitGlyphsAll.findFirst({
@@ -19,7 +20,7 @@ class LlvmService {
     // if (savedData)
     //   return savedData
 
-    const { system, user } = getPromt(params)
+    const { system, user } = getSplitGlyphsPromt(params)
     const response = await createAiRequest(system, user)
     const rawData = response.choices[0].message.content?.trim()
 
@@ -250,6 +251,28 @@ class LlvmService {
           })
         }
       }
+    }
+  }
+
+  // PinyinHieroglyphs
+  pinyinHieroglyphs = async (params: PinyinHieroglyphsPayload) => {
+    const { system, user } = getPinyinHieroglyphsPromt(params)
+    const response = await createAiRequest(system, user)
+    const rawData = response.choices[0].message.content?.trim()
+
+    try {
+      if (!rawData)
+        throw new Error('_', { cause: 'Failed to generate content.' })
+
+      const parsedData = JSON.parse(rawData)
+      const validatedData = PinyinHieroglyphsSchema.parse(parsedData)
+
+      return validatedData
+    }
+    catch (err) {
+      const errMsg = `Failed to format generated content. ${err}`
+      logger.error(errMsg, rawData)
+      throw new HTTPException(400, { message: errMsg })
     }
   }
 }

@@ -1,4 +1,4 @@
-import type { Final, FinalsTone } from '~/models/pinyin'
+import type { Final, FinalsTone } from '~/models/pinyin/pinyin'
 
 export function mockFinals() {
   return [

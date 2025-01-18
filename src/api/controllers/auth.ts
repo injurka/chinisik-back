@@ -5,7 +5,7 @@ import {
   AuthUserSchema,
   SignInUserPayloadSchema,
   SignUpUserPayloadSchema,
-} from '~/models/auth.schema'
+} from '~/models/auth'
 import { AuthService } from '~/services'
 
 class AuthController extends AController {

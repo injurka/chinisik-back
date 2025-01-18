@@ -1,7 +1,7 @@
 import { createRoute } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
 
-import { PinyinResponseSchema } from '~/models/pinyin.schema'
+import { PinyinResponseSchema } from '~/models/pinyin/pinyin.schema'
 import { PinyinService } from '~/services'
 
 class PinyinController extends AController {

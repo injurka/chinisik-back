@@ -1,7 +1,7 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
 
-import { CmsDescriptionSchema } from '~/models/cms.schema'
+import { CmsDescriptionSchema } from '~/models/cms/cms.schema'
 import { CmsService } from '~/services'
 
 class CmsController extends AController {

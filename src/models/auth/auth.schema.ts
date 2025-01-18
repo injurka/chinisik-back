@@ -1,5 +1,5 @@
 import { z } from '@hono/zod-openapi'
-import { UserSchema } from './user.schema'
+import { UserSchema } from '../user'
 
 const AuthUserSchema = z.object({
   token: z.string(),

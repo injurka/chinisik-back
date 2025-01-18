@@ -1,4 +1,4 @@
-type ToneType = 0 | 1 | 2 | 3 | 4
+import type { ToneType } from '../shared'
 
 interface HieroglyphKey {
   index?: number
@@ -13,5 +13,4 @@ interface HieroglyphKey {
 
 export type {
   HieroglyphKey,
-  ToneType,
 }

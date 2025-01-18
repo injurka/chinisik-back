@@ -1,4 +1,4 @@
-import type { HieroglyphKey } from '~/models/hieroglyph-key'
+import type { HieroglyphKey } from '~/models/hieroglyph-key/hieroglyph-key'
 
 export function mockHieroglyphKeys() {
   return [

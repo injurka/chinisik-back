@@ -6,13 +6,13 @@ async function jwtGuard(c: Context, next: Next) {
   const authHeader = c.req.header('x-authorization') ?? c.req.header('Authorizaition')
 
   if (!authHeader) {
-    return c.json({ message: 'Authorization header missing' }, 401)
+    return c.json({ message: 'Авторизуйтесь для доступа' }, 401)
   }
 
   const token = authHeader.split(' ')[1]
 
   if (!token) {
-    return c.json({ message: 'Token missing' }, 401)
+    return c.json({ message: 'Токен авторизации не найден' }, 401)
   }
 
   try {
@@ -25,7 +25,7 @@ async function jwtGuard(c: Context, next: Next) {
     const userPermissions = await userService.getPermissionsByUserId(user.id)
 
     if (!user) {
-      return c.json({ message: 'Invalid user' }, 401)
+      return c.json({ message: 'Некорректный пользователь' }, 401)
     }
 
     c.set('jwt', token)
@@ -35,7 +35,7 @@ async function jwtGuard(c: Context, next: Next) {
     await next()
   }
   catch {
-    return c.json({ message: 'Invalid token' }, 401)
+    return c.json({ message: 'Некорректный токен авторизации' }, 401)
   }
 }
 

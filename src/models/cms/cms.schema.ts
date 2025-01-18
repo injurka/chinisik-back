@@ -1,4 +1,4 @@
-import { JsonToDomElementSchema } from '~/models/shared.schema'
+import { JsonToDomElementSchema } from '~/models/shared/json-to-dom.schema'
 
 const CmsDescriptionSchema = JsonToDomElementSchema
 

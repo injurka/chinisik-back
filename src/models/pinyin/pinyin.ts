@@ -1,4 +1,4 @@
-export type ToneType = 0 | 1 | 2 | 3 | 4
+import type { ToneType } from '../shared'
 
 export interface Final {
   id: number

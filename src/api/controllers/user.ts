@@ -3,7 +3,7 @@ import AController from '~/api/interfaces/controller.abstract'
 import {
   PermissionSchema,
   UserSchema,
-} from '~/models/user.schema'
+} from '~/models/user'
 import { UserService } from '~/services'
 
 class UserController extends AController {

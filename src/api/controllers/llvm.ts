@@ -1,9 +1,10 @@
-import type { SplitGlyphsPayload } from '~/models/llvm'
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
-import { jwtGuard } from '~/middleware'
-import { SplitedGlyphsSchema } from '~/models/splited-glyphs.schema'
+import { ToneTypeSchema } from '~/models'
+import { PinyinHieroglyphsSchema } from '~/models/llvm/pinyin-hieroglyphs.schema'
+import { SplitedGlyphsSchema } from '~/models/llvm/splited-glyphs.schema'
 import { LlvmService } from '~/services'
+import { validPinyinSyllables } from '~/utils/constant'
 
 class LlvmController extends AController {
   private service = new LlvmService()
@@ -12,21 +13,29 @@ class LlvmController extends AController {
     super('/llvm')
 
     this.splitGlyphs()
+    this.pinyinHieroglyphs()
   }
 
   private splitGlyphs = () => {
-    const QuerySchema = z.object({
+    const BodySchema = z.object({
       type: z.enum(['sentence', 'word', 'hieroglyph']).default('word'),
       glyphs: z.string(),
     })
 
     const route = createRoute({
-      method: 'get',
+      method: 'post',
       path: `${this.path}/split-glyphs`,
       tags: ['llvm'],
       request: {
-        query: QuerySchema,
-        headers: z.object({ 'x-authorization': z.string() }),
+        body: {
+          content: {
+            'application/json': {
+              schema: BodySchema,
+            },
+          },
+        },
+        // TODO
+        // headers: z.object({ 'x-authorization': z.string() }),
       },
       responses: {
         200: {
@@ -40,14 +49,68 @@ class LlvmController extends AController {
       },
     })
 
-    this.router.use(route.path, jwtGuard)
+    // TODO
+    // this.router.use(route.path, jwtGuard)
     this.router.openapi(
       route,
       async (c) => {
-        const params = QuerySchema.parse(c.req.query()) satisfies SplitGlyphsPayload
-        const data = await this.service.splitGlyphs(params)
+        const body = c.req.valid('json')
+        const data = await this.service.splitGlyphs(body)
 
         return c.json(SplitedGlyphsSchema.parse(data), 200)
+      },
+    )
+  }
+
+  private pinyinHieroglyphs = () => {
+    const BodySchema = z.object({
+      tones: ToneTypeSchema.array()
+        .optional()
+        .default([1, 2, 3, 4]),
+      pinyin: z.string()
+        .default('ni')
+        .refine(val => validPinyinSyllables.includes(val), { message: 'Invalid pinyin syllable' }),
+      count: z.number()
+        .optional()
+        .default(2),
+    })
+
+    const route = createRoute({
+      method: 'post',
+      path: `${this.path}/pinyin-hieroglyphs`,
+      tags: ['llvm'],
+      request: {
+        body: {
+          content: {
+            'application/json': {
+              schema: BodySchema,
+            },
+          },
+        },
+        // TODO
+        // headers: z.object({ 'x-authorization': z.string() }),
+      },
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              schema: PinyinHieroglyphsSchema,
+            },
+          },
+          description: 'Generate pinyin tone hieroglyphs',
+        },
+      },
+    })
+
+    // TODO
+    // this.router.use(route.path, jwtGuard)
+    this.router.openapi(
+      route,
+      async (c) => {
+        const body = c.req.valid('json')
+        const data = await this.service.pinyinHieroglyphs(body)
+
+        return c.json(PinyinHieroglyphsSchema.parse(data), 200)
       },
     )
   }
