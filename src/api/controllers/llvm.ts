@@ -35,7 +35,7 @@ class LlvmController extends AController {
           },
         },
         // TODO
-        // headers: z.object({ 'x-authorization': z.string() }),
+        // headers: z.object({ 'authorization': z.string() }),
       },
       responses: {
         200: {

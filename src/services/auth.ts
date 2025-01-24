@@ -1,8 +1,8 @@
 import type { SignInUserPayload, SignUpUserPayload } from '~/models/auth'
 import type { User } from '~/models/user'
-import { sign } from 'hono/jwt'
 import { prisma } from '~/prisma'
 import { sendVerificationCode } from '~/utils/email'
+import { jwtEncode } from '~/utils/jwt'
 
 class AuthService {
   signUp = async (payload: SignUpUserPayload) => {
@@ -27,8 +27,7 @@ class AuthService {
   signIn = async (payload: SignInUserPayload) => {
     const user = await prisma.user.findFirstOrThrow({ where: { email: payload.email } })
 
-    const isPasswordValid = await Bun.password.verify(payload.password, user.password)
-
+    const isPasswordValid = await Bun.password.verify(payload.password, user.password!)
     if (!isPasswordValid) {
       throw new Error('Invalid password')
     }
@@ -41,13 +40,7 @@ class AuthService {
       updatedAt: user.updatedAt,
     } as User
 
-    const secret = process.env.JWT_SECRET!
-    const jwtPayload = {
-      sub: user.id,
-      user: transformedUser,
-      // exp: Math.floor(Date.now() / 1000) + 60 * 5, // Token expires in 5 minutes
-    }
-    const token = await sign(jwtPayload, secret)
+    const token = await jwtEncode({ id: transformedUser.id })
 
     return { token, user: transformedUser }
   }

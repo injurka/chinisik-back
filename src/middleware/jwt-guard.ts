@@ -1,9 +1,9 @@
 import type { Context, Next } from 'hono'
-import { verify } from 'hono/jwt'
 import { UserService } from '~/services'
+import { jwtDecode } from '~/utils/jwt'
 
 async function jwtGuard(c: Context, next: Next) {
-  const authHeader = c.req.header('x-authorization') ?? c.req.header('Authorizaition')
+  const authHeader = c.req.header('x-authorization') ?? c.req.header('authorization')
 
   if (!authHeader) {
     return c.json({ message: 'Авторизуйтесь для доступа' }, 401)
@@ -16,11 +16,9 @@ async function jwtGuard(c: Context, next: Next) {
   }
 
   try {
-    const secret = process.env.JWT_SECRET!
-    const decoded = await verify(token, secret) as { userId: number }
-
     const userService = new UserService()
 
+    const decoded = await jwtDecode(token)
     const user = await userService.getUserByUserId(decoded.userId)
     const userPermissions = await userService.getPermissionsByUserId(user.id)
 
