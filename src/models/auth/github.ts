@@ -51,7 +51,7 @@ interface GitHubEmail {
 
 interface GitHubNormalizedUser {
   id: string
-  email: string
+  email?: string
   name: string
   username: string
   avatarUrl: string
@@ -71,7 +71,7 @@ function normalizeGitHubUser(
 ): GitHubNormalizedUser {
   return {
     id: user.id.toString(),
-    email: emails.find(e => e.primary && e.verified)?.email || user.email || '',
+    email: emails.find(e => e.primary && e.verified)?.email || user.email || undefined,
     name: user.name || user.login,
     username: user.login,
     avatarUrl: user.avatar_url,

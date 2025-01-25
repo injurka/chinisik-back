@@ -11,15 +11,17 @@ datasource db {
 //* ==== Models ==================================================================== *//
 
 model User {
-  id       Int     @id @unique @default(autoincrement())
-  email    String  @unique
-  name     String?
-  password String?
+  id         Int      @id @unique @default(autoincrement())
+  email      String?  @unique
+  name       String?
+  password   String?
+  avatarUrl  String?
 
-  githubId String? @unique
+  githubId   String? @unique
+  googleId   String? @unique
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
 
   UserPermission UserPermission[]
 

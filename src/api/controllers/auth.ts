@@ -3,22 +3,12 @@ import { getCookie, setCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
 import AController from '~/api/interfaces/controller.abstract'
 import { jwtGuard } from '~/middleware'
-import {
-  AuthUserSchema,
-  type GitHubEmail,
-  type GitHubNormalizedUser,
-  type GitHubTokenData,
-  type GitHubUser,
-  normalizeGitHubUser,
-  SignInUserPayloadSchema,
-  SignUpUserPayloadSchema,
-} from '~/models/auth'
-import { prisma } from '~/prisma'
-import { AuthService } from '~/services'
-import { jwtEncode } from '~/utils/jwt'
+import { AuthUserSchema, SignInUserPayloadSchema, SignUpUserPayloadSchema } from '~/models/auth'
+import { AuthService, OAuthService } from '~/services'
 
 class AuthController extends AController {
   private service = new AuthService()
+  private oauthService = new OAuthService()
 
   constructor() {
     super('/auth')
@@ -29,6 +19,8 @@ class AuthController extends AController {
     this.sendVerificationCode()
     this.oauthGithub()
     this.oauthGithubCallback()
+    this.oauthGoogle()
+    this.oauthGoogleCallback()
   }
 
   // Base Auth
@@ -245,89 +237,15 @@ class AuthController extends AController {
       route,
       async (c) => {
         const { code, state } = c.req.valid('query')
-        const savedState = getCookie(c, 'oauth_state')
 
+        const savedState = getCookie(c, 'oauth_state')
         if (!state || state !== savedState) {
           throw new HTTPException(401, { message: 'Invalid state' })
         }
 
-        const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            client_id: process.env.GITHUB_CLIENT_ID,
-            client_secret: process.env.GITHUB_CLIENT_SECRET,
-            code,
-            state,
-          }),
-        })
+        const token = await this.oauthService.github(code, state)
 
-        if (!tokenResponse.ok) {
-          throw new HTTPException(401, { message: 'GitHub OAuth token exchange failed' })
-        }
-
-        const tokenData = await tokenResponse.json() as GitHubTokenData
-        const accessToken = tokenData.access_token
-
-        const [userResponse, emailsResponse] = await Promise.all([
-          fetch('https://api.github.com/user', {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              Accept: 'application/vnd.github+json',
-            },
-          }),
-          fetch('https://api.github.com/user/emails', {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              Accept: 'application/vnd.github+json',
-            },
-          }),
-        ])
-
-        if (!userResponse.ok) {
-          throw new HTTPException(401, { message: 'Failed to fetch GitHub user data' })
-        }
-
-        const user = await userResponse.json() as GitHubUser
-        const emails = await emailsResponse.json() as GitHubEmail[]
-
-        const normalizedUser: GitHubNormalizedUser = normalizeGitHubUser(user, emails)
-
-        if (!normalizedUser.email) {
-          throw new HTTPException(400, { message: 'Verified email required' })
-        }
-
-        const upsertedUser = await prisma.user.upsert({
-          where: {
-            githubId: normalizedUser.id,
-          },
-          create: {
-            githubId: normalizedUser.id,
-            email: normalizedUser.email,
-            name: normalizedUser.name,
-            password: '',
-            UserPermission: {
-              create: [{ permission: 'AiGenerate' }],
-            },
-          },
-          update: {
-            name: normalizedUser.name,
-            updatedAt: new Date(),
-          },
-          include: {
-            UserPermission: true,
-          },
-        })
-
-        const token = await jwtEncode({ id: upsertedUser.id })
-
-        setCookie(c, 'oauth_state', '', {
-          expires: new Date(0),
-          path: '/',
-        })
+        setCookie(c, 'oauth_state', '', { expires: new Date(0), path: '/' })
 
         return c.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`)
       },
@@ -335,7 +253,83 @@ class AuthController extends AController {
   }
 
   // -> Google
-  // TODO
+  private oauthGoogle = () => {
+    const route = createRoute({
+      method: 'get',
+      path: `${this.path}/google`,
+      tags: ['auth'],
+      responses: {
+        302: {
+          description: 'Redirect to Google OAuth',
+          headers: {
+            Location: {
+              schema: { type: 'string' },
+              description: 'Google OAuth URL',
+            },
+          },
+        },
+      },
+    })
+
+    this.router.openapi(
+      route,
+      async (c) => {
+        const state = Bun.randomUUIDv7()
+        const url = new URL('https://accounts.google.com/o/oauth2/v2/auth')
+
+        url.searchParams.set('client_id', process.env.GOOGLE_CLIENT_ID!)
+        url.searchParams.set('redirect_uri', process.env.GOOGLE_CALLBACK!)
+        url.searchParams.set('response_type', 'code')
+        url.searchParams.set('state', state)
+        url.searchParams.set('scope', 'openid email profile')
+        url.searchParams.set('access_type', 'offline')
+
+        c.header('Set-Cookie', `oauth_state=${state}; HttpOnly; Path=/; SameSite=Lax`)
+
+        return c.redirect(url.toString())
+      },
+    )
+  }
+
+  private oauthGoogleCallback = () => {
+    const route = createRoute({
+      method: 'get',
+      path: `${this.path}/google/callback`,
+      tags: ['auth'],
+      request: {
+        query: z.object({
+          code: z.string(),
+          state: z.string(),
+        }),
+      },
+      responses: {
+        302: {
+          description: 'OAuth callback handler',
+          headers: z.object({
+            Location: z.string().describe('Frontend redirect URL'),
+          }),
+        },
+      },
+    })
+
+    this.router.openapi(
+      route,
+      async (c) => {
+        const { code, state } = c.req.valid('query')
+        const savedState = getCookie(c, 'oauth_state')
+
+        if (!state || state !== savedState) {
+          throw new HTTPException(401, { message: 'Invalid state' })
+        }
+
+        const token = await this.oauthService.google(code, state)
+
+        setCookie(c, 'oauth_state', '', { expires: new Date(0), path: '/' })
+
+        return c.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`)
+      },
+    )
+  }
 }
 
 export { AuthController }
