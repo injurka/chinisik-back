@@ -1,9 +1,11 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
-import { ToneTypeSchema } from '~/models'
+import { jwtGuard } from '~/middleware'
+import { LinguisticAnalysisSchema, ToneTypeSchema } from '~/models'
 import { PinyinHieroglyphsSchema } from '~/models/llvm/pinyin-hieroglyphs.schema'
 import { SplitedGlyphsSchema } from '~/models/llvm/splited-glyphs.schema'
 import { LlvmService } from '~/services'
+import { AI_MODELS } from '~/utils/ai'
 import { validPinyinSyllables } from '~/utils/constant'
 
 class LlvmController extends AController {
@@ -14,6 +16,7 @@ class LlvmController extends AController {
 
     this.splitGlyphs()
     this.pinyinHieroglyphs()
+    this.linguisticAnalysis()
   }
 
   private splitGlyphs = () => {
@@ -58,6 +61,52 @@ class LlvmController extends AController {
         const data = await this.service.splitGlyphs(body)
 
         return c.json(SplitedGlyphsSchema.parse(data), 200)
+      },
+    )
+  }
+
+  private linguisticAnalysis = () => {
+    const BodySchema = z.object({
+      value: z.string().max(50).default('打电话'),
+      model: z.enum(AI_MODELS).default('google/gemini-flash-1.5'),
+    })
+
+    const route = createRoute({
+      method: 'post',
+      path: `${this.path}/linguistic-analysis`,
+      tags: ['llvm'],
+      request: {
+        body: {
+          content: {
+            'application/json': {
+              schema: BodySchema,
+            },
+          },
+        },
+        // headers: z.object({ authorization: z.string() }),
+      },
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              schema: LinguisticAnalysisSchema,
+            },
+          },
+          description: `
+Анализатор китайского языка, преобразующий текст в подробную структуру данных.
+          `,
+        },
+      },
+    })
+
+    // this.router.use(route.path, jwtGuard)
+    this.router.openapi(
+      route,
+      async (c) => {
+        const body = c.req.valid('json')
+        const data = await this.service.linguisticAnalysis(body)
+
+        return c.json(LinguisticAnalysisSchema.parse(data), 200)
       },
     )
   }

@@ -13,7 +13,7 @@ const splitGlyphsType: Record<SplitGlyphsType, unknown> = {
   word: wordJSON,
 }
 
-function getPromt(params: SplitGlyphsPayload) {
+function getPrompt(params: SplitGlyphsPayload) {
   const example = splitGlyphsType[params.type]
 
   const system = `
@@ -39,6 +39,6 @@ function getPromt(params: SplitGlyphsPayload) {
 }
 
 export {
-  getPromt,
+  getPrompt,
   splitGlyphsType,
 }
