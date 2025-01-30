@@ -1,12 +1,7 @@
+import type { GitHubEmail, GitHubNormalizedUser, GitHubTokenData, GitHubUser, GoogleNormalizedUser, GoogleTokenData, GoogleUser } from '~/models'
 import { HTTPException } from 'hono/http-exception'
 import {
-  type GitHubEmail,
-  type GitHubNormalizedUser,
-  type GitHubTokenData,
-  type GitHubUser,
-  type GoogleNormalizedUser,
-  type GoogleTokenData,
-  type GoogleUser,
+
   normalizeGitHubUser,
   normalizeGoogleUser,
 } from '~/models'

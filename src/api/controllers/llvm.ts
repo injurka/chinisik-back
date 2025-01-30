@@ -1,6 +1,5 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
-import { jwtGuard } from '~/middleware'
 import { LinguisticAnalysisSchema, ToneTypeSchema } from '~/models'
 import { PinyinHieroglyphsSchema } from '~/models/llvm/pinyin-hieroglyphs.schema'
 import { SplitedGlyphsSchema } from '~/models/llvm/splited-glyphs.schema'

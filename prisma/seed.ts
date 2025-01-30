@@ -1,5 +1,6 @@
+import type { Log } from '~/utils/logger'
 import { PrismaClient } from '@prisma/client'
-import { type Log, Logger, LogType } from '~/utils/logger'
+import { Logger, LogType } from '~/utils/logger'
 
 import { mockCms } from './data/cms'
 import { mockHieroglyphKeys } from './data/hieroglyph-key'
