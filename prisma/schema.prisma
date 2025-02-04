@@ -26,6 +26,8 @@ model User {
   UserPermission UserPermission[]
 
   @@map(name: "user")
+  LinguisticAnalysisAll LinguisticAnalysisAll[]
+  LinguisticAnalysisError LinguisticAnalysisError[]
 }
 
 model UserPermission {
@@ -178,6 +180,45 @@ model SplitGlyphsSentenceHieroglyphs {
   @@index([sentenceId])
   @@index([hieroglyphId])
   @@map(name: "split_glyphs_sentence_hieroglyphs")
+}
+
+//* ==== LinguisticAnalysis ======================================================== *//
+
+model LinguisticAnalysisAll {
+  id                 Int    @id @unique @default(autoincrement())
+  type               String
+  userId             Int
+  model              String
+  sourceValue        String
+  glyph              String
+  totalTokens        Int
+  generationDuration Int
+  
+  data          Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map(name: "linguistic_nalysis_all")
+}
+
+model LinguisticAnalysisError {
+  id             Int    @id @unique @default(autoincrement())
+  userId         Int
+  model          String
+  sourceValue    String
+  error          String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map(name: "linguistic_nalysis_error")
 }
 
 //* ==== Pinyin ==================================================================== *//

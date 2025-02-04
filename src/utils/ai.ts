@@ -6,6 +6,7 @@ const AI_OPENROUTER_MODELS = [
   'deepseek/deepseek-chat',
   'google/gemini-flash-1.5-8b',
   'google/gemini-flash-1.5',
+  'mistralai/mistral-small-24b-instruct-2501',
 ] as const
 
 const AI_MODELS = [...AI_DEEPSEEK_MODELS, ...AI_OPENROUTER_MODELS] as const

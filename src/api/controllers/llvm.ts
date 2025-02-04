@@ -1,5 +1,6 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
+import { jwtGuard } from '~/middleware'
 import { LinguisticAnalysisSchema, ToneTypeSchema } from '~/models'
 import { PinyinHieroglyphsSchema } from '~/models/llvm/pinyin-hieroglyphs.schema'
 import { SplitedGlyphsSchema } from '~/models/llvm/splited-glyphs.schema'
@@ -82,7 +83,7 @@ class LlvmController extends AController {
             },
           },
         },
-        // headers: z.object({ authorization: z.string() }),
+        headers: z.object({ 'x-authorization': z.string() }),
       },
       responses: {
         200: {
@@ -98,14 +99,16 @@ class LlvmController extends AController {
       },
     })
 
-    // this.router.use(route.path, jwtGuard)
+    this.router.use(route.path, jwtGuard)
     this.router.openapi(
       route,
       async (c) => {
         const body = c.req.valid('json')
-        const data = await this.service.linguisticAnalysis(body)
+        const user = c.get('user')
 
-        return c.json(LinguisticAnalysisSchema.parse(data), 200)
+        const data = await this.service.linguisticAnalysis(body, user)
+
+        return c.json(data, 200)
       },
     )
   }

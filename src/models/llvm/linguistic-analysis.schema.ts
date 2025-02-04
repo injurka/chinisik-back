@@ -11,7 +11,9 @@ const PinyinSchema = z.object({
   toneType: z.number().int().min(1).max(5),
   toneIndex: z.number().int(),
 })
-const PartOfSpeechSchema = z.enum(['verb', 'noun', 'adjective', 'pronoun', 'other', 'particle'])
+// TODO
+// const PartOfSpeechSchema = z.enum(['verb', 'noun', 'adjective', 'pronoun', 'other', 'particle'])
+const PartOfSpeechSchema = z.string()
 
 // Схемы для ключей
 const KeyPositionSchema = z.enum([
