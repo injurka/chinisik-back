@@ -8,8 +8,8 @@ const GrammarRulesSchema = z.object({
 })
 const PinyinSchema = z.object({
   value: z.string(),
-  toneType: z.number().int().min(1).max(5),
-  toneIndex: z.number().int(),
+  toneType: z.number().int().min(1).max(5).default(5),
+  toneIndex: z.number().int().default(0),
 })
 // TODO
 // const PartOfSpeechSchema = z.enum(['verb', 'noun', 'adjective', 'pronoun', 'other', 'particle'])

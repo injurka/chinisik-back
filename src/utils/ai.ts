@@ -47,7 +47,7 @@ async function createAiRequest(
   const mergedOptions = {
     model: 'deepseek-chat',
     response_format: { type: 'json_object' },
-    temperature: 0.5,
+    temperature: 0.7,
     ...options,
   } satisfies AiRequestOptions
 
