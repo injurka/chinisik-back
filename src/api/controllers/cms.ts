@@ -4,6 +4,8 @@ import AController from '~/api/interfaces/controller.abstract'
 import { CmsDescriptionSchema } from '~/models/cms/cms.schema'
 import { CmsService } from '~/services'
 
+const TAG = 'cms'
+
 class CmsController extends AController {
   private service = new CmsService()
 
@@ -17,7 +19,7 @@ class CmsController extends AController {
     const route = createRoute({
       method: 'get',
       path: `${this.path}/description/{sysname}`,
-      tags: ['cms'],
+      tags: [TAG],
       request: {
         params: z.object({
           sysname: z

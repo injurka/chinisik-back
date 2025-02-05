@@ -6,6 +6,8 @@ import { jwtGuard } from '~/middleware'
 import { AuthUserSchema, SignInUserPayloadSchema, SignUpUserPayloadSchema } from '~/models/auth'
 import { AuthService, OAuthService } from '~/services'
 
+const TAG = 'auth'
+
 class AuthController extends AController {
   private service = new AuthService()
   private oauthService = new OAuthService()
@@ -29,7 +31,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'get',
       path: `${this.path}/me`,
-      tags: ['auth'],
+      tags: [TAG],
       request: {
         headers: z.object({ authorization: z.string() }),
       },
@@ -67,7 +69,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'post',
       path: `${this.path}/sign-up`,
-      tags: ['auth'],
+      tags: [TAG],
       request: {
         body: {
           content: {
@@ -105,7 +107,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'post',
       path: `${this.path}/sign-in`,
-      tags: ['auth'],
+      tags: [TAG],
       request: {
         body: {
           content: {
@@ -142,7 +144,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'post',
       path: `${this.path}/send-verification-code`,
-      tags: ['auth'],
+      tags: [TAG],
       request: {
         body: {
           content: {
@@ -180,7 +182,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'get',
       path: `${this.path}/github`,
-      tags: ['auth'],
+      tags: [TAG],
       responses: {
         302: {
           description: 'Redirect to GitHub OAuth',
@@ -216,7 +218,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'get',
       path: `${this.path}/github/callback`,
-      tags: ['auth'],
+      tags: [TAG],
       request: {
         query: z.object({
           code: z.string(),
@@ -257,7 +259,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'get',
       path: `${this.path}/google`,
-      tags: ['auth'],
+      tags: [TAG],
       responses: {
         302: {
           description: 'Redirect to Google OAuth',
@@ -295,7 +297,7 @@ class AuthController extends AController {
     const route = createRoute({
       method: 'get',
       path: `${this.path}/google/callback`,
-      tags: ['auth'],
+      tags: [TAG],
       request: {
         query: z.object({
           code: z.string(),

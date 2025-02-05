@@ -1,12 +1,14 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
 import { jwtGuard } from '~/middleware'
-import { LinguisticAnalysisSchema, ToneTypeSchema } from '~/models'
+import { LlvmLinguisticAnalysisSchema, ToneTypeSchema } from '~/models'
 import { PinyinHieroglyphsSchema } from '~/models/llvm/pinyin-hieroglyphs.schema'
 import { SplitedGlyphsSchema } from '~/models/llvm/splited-glyphs.schema'
 import { LlvmService } from '~/services'
 import { AI_MODELS } from '~/utils/ai'
 import { validPinyinSyllables } from '~/utils/constant'
+
+const TAG = 'llvm'
 
 class LlvmController extends AController {
   private service = new LlvmService()
@@ -28,7 +30,7 @@ class LlvmController extends AController {
     const route = createRoute({
       method: 'post',
       path: `${this.path}/split-glyphs`,
-      tags: ['llvm'],
+      tags: [TAG],
       request: {
         body: {
           content: {
@@ -74,7 +76,7 @@ class LlvmController extends AController {
     const route = createRoute({
       method: 'post',
       path: `${this.path}/linguistic-analysis`,
-      tags: ['llvm'],
+      tags: [TAG],
       request: {
         body: {
           content: {
@@ -89,7 +91,7 @@ class LlvmController extends AController {
         200: {
           content: {
             'application/json': {
-              schema: LinguisticAnalysisSchema,
+              schema: LlvmLinguisticAnalysisSchema,
             },
           },
           description: `
@@ -129,7 +131,7 @@ class LlvmController extends AController {
     const route = createRoute({
       method: 'post',
       path: `${this.path}/pinyin-hieroglyphs`,
-      tags: ['llvm'],
+      tags: [TAG],
       request: {
         body: {
           content: {

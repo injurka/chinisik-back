@@ -8,8 +8,8 @@ const GrammarRulesSchema = z.object({
 })
 const PinyinSchema = z.object({
   value: z.string(),
-  toneType: z.number().int().min(1).max(5).default(5),
   toneIndex: z.number().int().default(0),
+  toneType: z.number().int().min(1).max(5).default(5),
 })
 // TODO
 // const PartOfSpeechSchema = z.enum(['verb', 'noun', 'adjective', 'pronoun', 'other', 'particle'])
@@ -58,8 +58,9 @@ const KeySchema = z.object({
   glyph: z.string(),
   position: KeyPositionSchema,
   role: KeyRoleSchema,
-  translate: z.string(),
+  translate: z.string().optional(),
   pinyin: z.array(PinyinSchema),
+  description: z.string().optional(),
   keyInfo: z.object({
     number: z.number(),
     name: z.string(),
@@ -110,16 +111,16 @@ const SentenceSchema = z.object({
   components: z.array(z.union([HieroglyphSchema, WordSchema])).optional(),
 }).passthrough()
 
-const LinguisticAnalysisSchema = z.object({
+const LlvmLinguisticAnalysisSchema = z.object({
   sentences: z.array(SentenceSchema),
 })
 
-const LinguisticAnalysisSourceTypeSchema = z.object({
+const LlvmLinguisticAnalysisSourceTypeSchema = z.object({
   type: z.enum(['sentence', 'word']),
   cn: z.string(),
 })
 
 export {
-  LinguisticAnalysisSchema,
-  LinguisticAnalysisSourceTypeSchema,
+  LlvmLinguisticAnalysisSchema,
+  LlvmLinguisticAnalysisSourceTypeSchema,
 }

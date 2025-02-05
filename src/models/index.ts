@@ -1,6 +1,7 @@
 export * from './auth'
 export * from './cms'
 export * from './hieroglyph-key'
+export * from './linguistic-analysis'
 export * from './llvm'
 export * from './pinyin'
 export * from './shared'

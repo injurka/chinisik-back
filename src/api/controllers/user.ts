@@ -6,6 +6,8 @@ import {
 } from '~/models/user'
 import { UserService } from '~/services'
 
+const TAG = 'user'
+
 class UserController extends AController {
   private service = new UserService()
 
@@ -20,7 +22,7 @@ class UserController extends AController {
     const route = createRoute({
       method: 'get',
       path: `${this.path}/{id}`,
-      tags: ['user'],
+      tags: [TAG],
       request: {
         params: z.object({
           id: z
@@ -60,7 +62,7 @@ class UserController extends AController {
     const route = createRoute({
       method: 'get',
       path: `${this.path}/{id}/permisson`,
-      tags: ['user'],
+      tags: [TAG],
       request: {
         params: z.object({
           id: z

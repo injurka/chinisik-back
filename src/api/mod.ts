@@ -4,40 +4,27 @@ import {
   AuthController,
   CmsController,
   HieroglyphKeyController,
+  LinguisticAnalysisController,
   LlvmController,
   PinyinController,
   UserController,
 } from './controllers'
 
-const controllers = [
-  {
-    basePath: '/api/v1',
-    controller: new AuthController(),
-  },
-  {
-    basePath: '/api/v1',
-    controller: new UserController(),
-  },
-  {
-    basePath: '/api/v1',
-    controller: new HieroglyphKeyController(),
-  },
-  {
-    basePath: '/api/v1',
-    controller: new LlvmController(),
-  },
-  {
-    basePath: '/api/v1',
-    controller: new CmsController(),
-  },
-  {
-    basePath: '/api/v1',
-    controller: new PinyinController(),
-  },
-]
+const COMBINE_V1 = {
+  BASE_PATH: '/api/v1',
+  CONTROLLERS: [
+    new AuthController(),
+    new UserController(),
+    new HieroglyphKeyController(),
+    new LlvmController(),
+    new CmsController(),
+    new PinyinController(),
+    new LinguisticAnalysisController(),
+  ],
+}
 
 export function setupRoutes(server: Hono) {
-  controllers.forEach(({ basePath, controller: { router } }) => {
-    server.route(basePath, router)
+  COMBINE_V1.CONTROLLERS.forEach((controller) => {
+    server.route(COMBINE_V1.BASE_PATH, controller.router)
   })
 }

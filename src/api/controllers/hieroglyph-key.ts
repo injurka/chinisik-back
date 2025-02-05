@@ -3,6 +3,8 @@ import AController from '~/api/interfaces/controller.abstract'
 import { HieroglyphKeySchema } from '~/models/hieroglyph-key/hieroglyph-key.schema'
 import { HieroglyphKeyService } from '~/services'
 
+const TAG = 'keys'
+
 class HieroglyphKeyController extends AController {
   private service = new HieroglyphKeyService()
 
@@ -16,7 +18,7 @@ class HieroglyphKeyController extends AController {
     const route = createRoute({
       method: 'get',
       path: `${this.path}`,
-      tags: ['keys'],
+      tags: [TAG],
       responses: {
         200: {
           content: {

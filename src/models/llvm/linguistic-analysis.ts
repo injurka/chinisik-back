@@ -1,14 +1,14 @@
 import type { z } from '@hono/zod-openapi'
-import type { LinguisticAnalysisSchema } from './linguistic-analysis.schema'
+import type { LlvmLinguisticAnalysisSchema } from './linguistic-analysis.schema'
 
-interface LinguisticAnalysisSourceType {
+interface LlvmLinguisticAnalysisSourceType {
   type: 'sentence' | 'word'
   cn: string
 }
 
-type LinguisticAnalysis = z.infer<typeof LinguisticAnalysisSchema>
+type LlvmLinguisticAnalysis = z.infer<typeof LlvmLinguisticAnalysisSchema>
 
 export type {
-  LinguisticAnalysis,
-  LinguisticAnalysisSourceType,
+  LlvmLinguisticAnalysis,
+  LlvmLinguisticAnalysisSourceType,
 }

@@ -29,7 +29,7 @@ const modelDescription = `
   translate: string,
   transcription: string,
   grammarRules: Array<GrammarRules>,
-  hints: string[],
+  description: string,
   components: Array<Word|Hieroglyph>
 }
 
@@ -68,6 +68,7 @@ const modelDescription = `
   position: KeyPosition,
   role: KeyRole,
   translate: string,
+  hints: string[]
   keyInfo: {
     number: number, // Важно, чтобы это были индекс иероглифа и из набора 214 ключей словаря Канси.
     name: string,
@@ -147,7 +148,8 @@ const KeySchema = z.object({
   glyph: z.string(),
   position: KeyPositionSchema,
   role: KeyRoleSchema,
-  translate: z.string(),
+  translate: z.string().optional(),
+  description: z.string().optional(),
   pinyin: z.array(PinyinSchema),
   keyInfo: z.object({
     number: z.number(),

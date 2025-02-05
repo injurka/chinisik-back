@@ -3,14 +3,14 @@ import type { ZodSchema } from 'zod'
 import type { User } from '~/models'
 import type {
   LinguisticAnalysisPayload,
-  LinguisticAnalysisSourceType,
+  LlvmLinguisticAnalysisSourceType,
   PinyinHieroglyphsPayload,
   SplitGlyphsPayload,
 } from '~/models/llvm'
 import { HTTPException } from 'hono/http-exception'
 import {
-  LinguisticAnalysisSchema,
-  LinguisticAnalysisSourceTypeSchema,
+  LlvmLinguisticAnalysisSchema,
+  LlvmLinguisticAnalysisSourceTypeSchema,
   PinyinHieroglyphsSchema,
   SplitedGlyphsSchema,
 } from '~/models/llvm'
@@ -78,9 +78,9 @@ class LlvmService {
       totalTokens += sourceTypeResponse?.usage?.total_tokens ?? 0
 
       const sourceTypeContent = sourceTypeResponse.choices[0].message.content
-      const sourceType = await this.processAiResponse<LinguisticAnalysisSourceType>(
+      const sourceType = await this.processAiResponse<LlvmLinguisticAnalysisSourceType>(
         sourceTypeContent,
-        LinguisticAnalysisSourceTypeSchema,
+        LlvmLinguisticAnalysisSourceTypeSchema,
       )
 
       const analysisResponse = await createAiRequest(
@@ -92,7 +92,7 @@ class LlvmService {
 
       const response = await this.processAiResponse(
         analysisContent,
-        LinguisticAnalysisSchema,
+        LlvmLinguisticAnalysisSchema,
       )
 
       const endTime = performance.now()
@@ -111,7 +111,7 @@ class LlvmService {
         },
       })
 
-      return LinguisticAnalysisSchema.parse(response)
+      return LlvmLinguisticAnalysisSchema.parse(response)
     }
     catch (error) {
       await prisma.linguisticAnalysisError.create({

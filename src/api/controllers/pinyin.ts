@@ -4,6 +4,8 @@ import AController from '~/api/interfaces/controller.abstract'
 import { PinyinResponseSchema } from '~/models/pinyin/pinyin.schema'
 import { PinyinService } from '~/services'
 
+const TAG = 'pinyin'
+
 class PinyinController extends AController {
   private service = new PinyinService()
 
@@ -17,7 +19,7 @@ class PinyinController extends AController {
     const route = createRoute({
       method: 'get',
       path: `${this.path}`,
-      tags: ['pinyin'],
+      tags: [TAG],
       request: {
 
       },
