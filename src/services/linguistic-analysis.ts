@@ -13,10 +13,10 @@ class LinguisticAnalysisService {
           take: limit,
           ...(user
             ? {
-              where: {
-                userId: user.id,
-              },
-            }
+                where: {
+                  userId: user.id,
+                },
+              }
             : {}
           ),
         }),
