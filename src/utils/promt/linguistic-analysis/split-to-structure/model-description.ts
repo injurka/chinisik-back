@@ -1,12 +1,12 @@
 const modelDescription = ` 
 # Китайский лингвистический анализ (JSON структура)
 
-**Иерархия элементов**:
+# Иерархия элементов:
 1. Sentence → Word/Hieroglyph (В предложении могут как просто слова, так и простые иероглифы которые нельзя отнести к слову)
 2. Word → Hieroglyph (Слово всегда разделяется на иероглифы, предложение должно разбиваться на компоненты так, чтобы слова могли быть разбиты на иероглифы)
 3. Hieroglyph → Key (У всех иероглифов есть ключи из которых они состоят)
 
-**Поля**:
+# Поля:
 
 // Используется в различных моделях
 - GrammarRules: {
@@ -17,7 +17,7 @@ const modelDescription = `
 - Pinyin: {
   value: string, // Плоский текст без тона
   toneType: 1|2|3|4|5, // Пример тона: 1 → первый тон ... 5 -> без тона. По умолчанию значение - 5
-  toneIndex: number // По умолчанию значение - 0
+  toneIndex: number // Индекс позиции тона в слоге (0 для первой гласной в слоге)
 }
 - PartOfSpeech: string // На русском языке
 
@@ -90,125 +90,28 @@ const modelDescription = `
   * Последний элемент массива/объекта НЕ должен иметь запятую
   * Все строковые значения должны быть в двойных кавычках с правильным экранированием
   * Вложенные структуры должны соблюдать правильную вложенность и закрытие скобок
-}
+- Правила для тонов:
+  * Правила размещения тона в слоге:
+   - Если в слоге одна гласная - тон ставится над ней
+   - Если в слоге несколько гласных: Для a, e, o - тон ставится над первой из них, для других комбинаций - тон ставится над последней гласной
+   - В дифтонгах ui и iu тон ставится над u
 
-# Текущая схема валидации '@hono/zod-openapi'
+  * Стандартные правила записи тонов:
+   - 1-й тон: макрон (ā)
+   - 2-й тон: акут (á)
+   - 3-й тон: гачек (ǎ)
+   - 4-й тон: гравис (à)
+   - 5-й тон: без диакритического знака (a)
 
-const GrammarRulesSchema = z.object({
-  type: z.string(),
-  description: z.string(),
-  example: z.string().optional(),
-})
-const PinyinSchema = z.object({
-  value: z.string(),
-  toneType: z.number().int().min(1).max(5).default(5),
-  toneIndex: z.number().int().default(0),
-})
-const PartOfSpeechSchema = z.string()
+  * Обязательная проверка:
+   - Каждый слог должен иметь только один тон
+   - Тон должен быть размещен строго по правилам
+   - Нейтральный тон (5) используется только в определённых грамматических случаях
 
-const KeyPositionSchema = z.enum([
-  'left',
-  'right',
-  'top',
-  'bottom',
-  'full-surround',
-  'top-surround',
-  'bottom-surround',
-  'left-surround',
-  'overlaid',
-  'center',
-  'inside',
-  'diagonal',
-  'top-left',
-  'top-right',
-  'bottom-left',
-  'bottom-right',
-  'cross',
-  'floating',
-])
-const KeyRoleSchema = z.enum([
-  'semantic',
-  'phonetic',
-  'empty-sign',
-  'differentiator',
-  'structural',
-  'pictographic',
-  'compound-semantic',
-  'loan-component',
-  'semantic-phonetic',
-  'radical-variant',
-  'orthographic-marker',
-  'semantic-corrupt',
-  'component-fusion',
-  'pseudo-component',
-  'ornamental',
-])
-
-const KeySchema = z.object({
-  glyph: z.string(),
-  position: KeyPositionSchema,
-  role: KeyRoleSchema,
-  translate: z.string().optional(),
-  description: z.string().optional(),
-  pinyin: z.array(PinyinSchema),
-  keyInfo: z.object({
-    number: z.number(),
-    name: z.string(),
-    variants: z.array(z.string()),
-    frequencyRank: z.number(),
-  }).nullable().optional().nullable(),
-})
-
-const HieroglyphSchema = z.object({
-  type: z.literal('hieroglyph'),
-  glyph: z.string(),
-  pinyin: z.array(PinyinSchema),
-  partOfSpeech: PartOfSpeechSchema,
-  translate: z.string(),
-  transcription: z.string(),
-  strokeCount: z.number().default(0),
-  etymology: z.string().default(''),
-  mnemonic: z.string().default(''),
-  keys: z.array(KeySchema).optional(),
-  grammarRules: z.array(GrammarRulesSchema).optional(),
-  hints: z.array(z.string()).optional(),
-})
-
-const WordSchema = z.object({
-  type: z.literal('word'),
-  glyph: z.string(),
-  pinyin: z.array(PinyinSchema),
-  partOfSpeech: PartOfSpeechSchema,
-  translate: z.string(),
-  transcription: z.string(),
-  grammarRules: z.array(GrammarRulesSchema).optional(),
-  hints: z.array(z.string()).optional(),
-  hieroglyphs: z.array(HieroglyphSchema).optional(),
-})
-
-const SentenceSchema = z.object({
-  type: z.literal('sentence'),
-  structure: z.object({
-    type: z.string(),
-    description: z.string(),
-  }),
-  glyph: z.string(),
-  pinyin: z.array(PinyinSchema),
-  translate: z.string(),
-  transcription: z.string(),
-  grammarRules: z.array(GrammarRulesSchema).optional(),
-  hints: z.array(z.string()).optional(),
-  components: z.array(z.union([HieroglyphSchema, WordSchema])).optional(),
-})
-
-const LinguisticAnalysisSchema = z.object({
-  sentences: z.array(SentenceSchema),
-})
-
-const LinguisticAnalysisSourceTypeSchema = z.object({
-  type: z.enum(['sentence', 'word']),
-  cn: z.string(),
-})
+  * Валидация пиньиня:
+   - Проверка соответствия инициалей и финалей стандарту
+   - Проверка допустимых комбинаций согласных и гласных
+   - Проверка правильности расстановки тонов согласно фонетическим правилам
 `
 
 export { modelDescription }
