@@ -1,9 +1,6 @@
 import { prisma } from '~/prisma'
 
 class PinyinService {
-  //* Create
-
-  //* Read
   getPinyin = async () => {
     const initials = await prisma.pinyinInitial.findMany({
       select: {
@@ -60,10 +57,6 @@ class PinyinService {
       initialWithFinal,
     }
   }
-
-  //* Update
-
-  //* Delete
 }
 
 export { PinyinService }

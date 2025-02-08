@@ -39,8 +39,7 @@ class LlvmController extends AController {
             },
           },
         },
-        // TODO
-        // headers: z.object({ 'authorization': z.string() }),
+        headers: z.object({ authorization: z.string() }),
       },
       responses: {
         200: {
@@ -54,8 +53,7 @@ class LlvmController extends AController {
       },
     })
 
-    // TODO
-    // this.router.use(route.path, jwtGuard)
+    this.router.use(route.path, jwtGuard)
     this.router.openapi(
       route,
       async (c) => {
@@ -69,7 +67,7 @@ class LlvmController extends AController {
 
   private linguisticAnalysis = () => {
     const BodySchema = z.object({
-      value: z.string().max(50).default('打电话'),
+      value: z.string().max(100).default('打电话'),
       model: z.enum(AI_MODELS).default('google/gemini-flash-1.5'),
     })
 
@@ -140,8 +138,7 @@ class LlvmController extends AController {
             },
           },
         },
-        // TODO
-        // headers: z.object({ 'x-authorization': z.string() }),
+        headers: z.object({ authorization: z.string() }),
       },
       responses: {
         200: {
@@ -155,8 +152,7 @@ class LlvmController extends AController {
       },
     })
 
-    // TODO
-    // this.router.use(route.path, jwtGuard)
+    this.router.use(route.path, jwtGuard)
     this.router.openapi(
       route,
       async (c) => {

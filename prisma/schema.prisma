@@ -99,7 +99,6 @@ model SplitGlyphsHieroglyph {
   words     SplitGlyphsWordHieroglyphs[]
   sentences SplitGlyphsSentenceHieroglyphs[]
 
-
   @@map(name: "split_glyphs_hieroglyph")
 }
 
@@ -220,6 +219,21 @@ model LinguisticAnalysisError {
   @@index([userId])
   @@map(name: "linguistic_nalysis_error")
 }
+
+//* ==== HSK ======================================================================= *//
+
+model HieroglyphHsk {
+  id                Int     @id @default(autoincrement())
+  glyph             String
+  traditionalGlyph  String
+  level             Int
+  
+  translation       Json
+  pinyin            Json
+
+  @@map(name: "hieroglyph_hsk")
+}
+
 
 //* ==== Pinyin ==================================================================== *//
 

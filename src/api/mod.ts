@@ -3,6 +3,7 @@ import type { OpenAPIHono as Hono } from '@hono/zod-openapi'
 import {
   AuthController,
   CmsController,
+  HieroglyphHskController,
   HieroglyphKeyController,
   LinguisticAnalysisController,
   LlvmController,
@@ -16,9 +17,11 @@ const COMBINE_V1 = {
     new AuthController(),
     new UserController(),
     new HieroglyphKeyController(),
+    new HieroglyphHskController(),
     new LlvmController(),
     new CmsController(),
     new PinyinController(),
+    new LinguisticAnalysisController(),
     new LinguisticAnalysisController(),
   ],
 }

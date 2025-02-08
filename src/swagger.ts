@@ -140,6 +140,13 @@ function setupSwagger(server: Hono) {
       .json-schema-2020-12__attribute--primary {
         color: var(--primary-color) !important;
       }
+      .json-schema-2020-12-accordion,
+      .json-schema-2020-12-expand-deep-button {
+        background-color: transparent !important;
+      }
+      .json-schema-2020-12__title {
+        color: #fff !important;
+      }
       </style>
         </head>
         ${SwaggerUI({ url: '/doc' })}
