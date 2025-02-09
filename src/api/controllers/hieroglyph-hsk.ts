@@ -81,6 +81,7 @@ class HieroglyphHskController extends AController {
         query: z.object({
           page: PageSchema,
           limit: PageLimitSchema,
+          keyword: z.string().optional(),
         }),
       },
       responses: {
@@ -99,9 +100,9 @@ class HieroglyphHskController extends AController {
       route,
       async (c) => {
         const { level } = c.req.valid('param')
-        const { page, limit } = c.req.valid('query')
+        const { page, limit, keyword } = c.req.valid('query')
 
-        const { data, total } = await this.service.getHieroglyphsByHskList(level, page, limit)
+        const { data, total } = await this.service.getHieroglyphsByHskList(level, page, limit, keyword)
 
         return c.json(
           {
