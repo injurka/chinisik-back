@@ -7,7 +7,6 @@ const AI_OPENROUTER_MODELS = [
   'google/gemini-flash-1.5',
   'google/gemini-2.0-flash-001',
   'google/gemma-2-27b-it',
-  'liquid/lfm-40b',
 ] as const
 
 const AI_MODELS = [...AI_DEEPSEEK_MODELS, ...AI_OPENROUTER_MODELS] as const

@@ -102,7 +102,7 @@ class HieroglyphHskController extends AController {
         const { level } = c.req.valid('param')
         const { page, limit, keyword } = c.req.valid('query')
 
-        const { data, total } = await this.service.getHieroglyphsByHskList(level, page, limit, keyword)
+        const { data, total } = await this.service.getHieroglyphsByHskList(level, page, limit, keyword?.toLowerCase())
 
         return c.json(
           {
