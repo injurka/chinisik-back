@@ -3,7 +3,8 @@ import exampleOutputJSON from './jsons/default-output.json'
 import { modelDescription } from './model-description'
 
 interface Payload {
-  value: string
+  user: string
+  system?: string
 }
 
 function getPrompt(params: Payload) {
@@ -32,11 +33,13 @@ function getPrompt(params: Payload) {
 
   ОПИСАНИЕ МОДЕЛИ ДАННЫХ:
   ${modelDescription}
+
+  ${params?.system ? JSON.stringify(params?.system) : ''}
   `
 
   const user = `
   \`\`\`json
-  ${JSON.stringify(params)}
+  ${JSON.stringify(params.user)}
   \`\`\`
   `
 

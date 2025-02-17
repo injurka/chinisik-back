@@ -7,7 +7,7 @@ function mockHsk() {
         {
           syllable: 'ai',
           tone: 4,
-          position: 1,
+          position: 0,
         },
       ],
       translation: {
@@ -22,7 +22,7 @@ function mockHsk() {
         {
           syllable: 'ai',
           tone: 4,
-          position: 1,
+          position: 0,
         },
         {
           syllable: 'hao',
@@ -59,11 +59,6 @@ function mockHsk() {
           tone: 4,
           position: 1,
         },
-        {
-          syllable: 'ba',
-          tone: 4,
-          position: 1,
-        },
       ],
       translation: {
         en: 'old man, father, papa, pappa, daddy, pa, begetter, pop, dada, dad, male parent, pater, pappy, pops, poppa',
@@ -73,13 +68,7 @@ function mockHsk() {
     {
       glyph: '吧',
       traditionalGlyph: '吧',
-      pinyin: [
-        {
-          syllable: 'ba',
-          tone: 5,
-          position: 1,
-        },
-      ],
+      pinyin: [],
       translation: {
         en: 'particle: used to show mild imperative or uncertainty',
         ru: 'частица: используется для выражения мягкого повеления или неуверенности',
@@ -627,7 +616,7 @@ function mockHsk() {
         {
           syllable: 'cha',
           tone: 2,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -642,7 +631,7 @@ function mockHsk() {
         {
           syllable: 'cha',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -657,7 +646,7 @@ function mockHsk() {
         {
           syllable: 'chang',
           tone: 2,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -672,12 +661,12 @@ function mockHsk() {
         {
           syllable: 'chang',
           tone: 2,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'chang',
           tone: 2,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -692,7 +681,7 @@ function mockHsk() {
         {
           syllable: 'chang',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -707,7 +696,7 @@ function mockHsk() {
         {
           syllable: 'chang',
           tone: 4,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'ge',
@@ -727,7 +716,7 @@ function mockHsk() {
         {
           syllable: 'che',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -742,12 +731,12 @@ function mockHsk() {
         {
           syllable: 'che',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'piao',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -762,12 +751,12 @@ function mockHsk() {
         {
           syllable: 'che',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'shang',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -782,12 +771,12 @@ function mockHsk() {
         {
           syllable: 'che',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'zhan',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -802,7 +791,7 @@ function mockHsk() {
         {
           syllable: 'chi',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -817,7 +806,7 @@ function mockHsk() {
         {
           syllable: 'chi',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'fan',
@@ -837,7 +826,7 @@ function mockHsk() {
         {
           syllable: 'chu',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -852,7 +841,7 @@ function mockHsk() {
         {
           syllable: 'chu',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'lai',
@@ -872,7 +861,7 @@ function mockHsk() {
         {
           syllable: 'chu',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'qu',
@@ -892,7 +881,7 @@ function mockHsk() {
         {
           syllable: 'chuan',
           tone: 1,
-          position: 2,
+          position: 3,
         },
       ],
       translation: {
@@ -987,7 +976,7 @@ function mockHsk() {
         {
           syllable: 'che',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -1007,12 +996,12 @@ function mockHsk() {
         {
           syllable: 'dian',
           tone: 4,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'hua',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -1052,7 +1041,7 @@ function mockHsk() {
         {
           syllable: 'qiu',
           tone: 2,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -1112,7 +1101,7 @@ function mockHsk() {
         {
           syllable: 'sheng',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -1232,7 +1221,7 @@ function mockHsk() {
         {
           syllable: 'fang',
           tone: 1,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -1251,7 +1240,7 @@ function mockHsk() {
         },
         {
           syllable: 'shang',
-          tone: 5,
+          tone: 4,
           position: 2,
         },
       ],
@@ -1377,7 +1366,7 @@ function mockHsk() {
         {
           syllable: 'nao',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -1397,7 +1386,7 @@ function mockHsk() {
         {
           syllable: 'shi',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -1417,7 +1406,7 @@ function mockHsk() {
         {
           syllable: 'shi',
           tone: 4,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'ji',
@@ -1442,7 +1431,7 @@ function mockHsk() {
         {
           syllable: 'ying',
           tone: 3,
-          position: 3,
+          position: 1,
         },
       ],
       translation: {
@@ -1462,12 +1451,12 @@ function mockHsk() {
         {
           syllable: 'ying',
           tone: 3,
-          position: 3,
+          position: 1,
         },
         {
           syllable: 'yuan',
           tone: 4,
-          position: 3,
+          position: 2,
         },
       ],
       translation: {
@@ -1607,7 +1596,7 @@ function mockHsk() {
         {
           syllable: 'shu',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -1712,7 +1701,7 @@ function mockHsk() {
         {
           syllable: 'er',
           tone: 2,
-          position: 1,
+          position: 0,
         },
         {
           syllable: 'zi',
@@ -1732,7 +1721,7 @@ function mockHsk() {
         {
           syllable: 'er',
           tone: 4,
-          position: 1,
+          position: 0,
         },
       ],
       translation: {
@@ -1747,7 +1736,7 @@ function mockHsk() {
         {
           syllable: 'fan',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -1762,7 +1751,7 @@ function mockHsk() {
         {
           syllable: 'fan',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'dian',
@@ -1782,7 +1771,7 @@ function mockHsk() {
         {
           syllable: 'fang',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'jian',
@@ -1802,7 +1791,7 @@ function mockHsk() {
         {
           syllable: 'fang',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'zi',
@@ -1822,7 +1811,7 @@ function mockHsk() {
         {
           syllable: 'fang',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -1837,7 +1826,7 @@ function mockHsk() {
         {
           syllable: 'fang',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'jia',
@@ -1857,7 +1846,7 @@ function mockHsk() {
         {
           syllable: 'fang',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'xue',
@@ -1932,7 +1921,7 @@ function mockHsk() {
         {
           syllable: 'fen',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -1962,7 +1951,7 @@ function mockHsk() {
         {
           syllable: 'gan',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -1977,12 +1966,12 @@ function mockHsk() {
         {
           syllable: 'gan',
           tone: 1,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'jing',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -1997,15 +1986,15 @@ function mockHsk() {
         {
           syllable: 'gan',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'shen',
           tone: 2,
-          position: 1,
+          position: 2,
         },
         {
-          syllable: 'mo',
+          syllable: 'ma',
           tone: 5,
           position: 1,
         },
@@ -2042,7 +2031,7 @@ function mockHsk() {
         {
           syllable: 'xing',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -2127,7 +2116,7 @@ function mockHsk() {
         {
           syllable: 'gei',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -2142,7 +2131,7 @@ function mockHsk() {
         {
           syllable: 'gen',
           tone: 1,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -2166,7 +2155,7 @@ function mockHsk() {
         {
           syllable: 'ren',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -2341,7 +2330,7 @@ function mockHsk() {
         {
           syllable: 'shi',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -2401,7 +2390,7 @@ function mockHsk() {
         {
           syllable: 'yu',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -2456,7 +2445,7 @@ function mockHsk() {
         {
           syllable: 'chi',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -2826,7 +2815,7 @@ function mockHsk() {
         {
           syllable: 'che',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -2846,7 +2835,7 @@ function mockHsk() {
         {
           syllable: 'chang',
           tone: 3,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -2866,7 +2855,7 @@ function mockHsk() {
         {
           syllable: 'piao',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -2956,7 +2945,7 @@ function mockHsk() {
         {
           syllable: 'zhu',
           tone: 5,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -3011,7 +3000,7 @@ function mockHsk() {
         {
           syllable: 'ren',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -3061,7 +3050,7 @@ function mockHsk() {
         {
           syllable: 'mian',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -3211,7 +3200,7 @@ function mockHsk() {
         {
           syllable: 'jin',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -3226,7 +3215,7 @@ function mockHsk() {
         {
           syllable: 'jin',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'lai',
@@ -3242,7 +3231,7 @@ function mockHsk() {
         {
           syllable: 'jin',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'qu',
@@ -3312,7 +3301,7 @@ function mockHsk() {
         {
           syllable: 'kai',
           tone: 1,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3327,12 +3316,12 @@ function mockHsk() {
         {
           syllable: 'kai',
           tone: 1,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'che',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -3347,7 +3336,7 @@ function mockHsk() {
         {
           syllable: 'kai',
           tone: 1,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'hui',
@@ -3367,7 +3356,7 @@ function mockHsk() {
         {
           syllable: 'kai',
           tone: 1,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'wan',
@@ -3392,7 +3381,7 @@ function mockHsk() {
         {
           syllable: 'kan',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3407,12 +3396,12 @@ function mockHsk() {
         {
           syllable: 'kan',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'bing',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3427,12 +3416,12 @@ function mockHsk() {
         {
           syllable: 'kan',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'dao',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3447,7 +3436,7 @@ function mockHsk() {
         {
           syllable: 'kan',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'jian',
@@ -3467,7 +3456,7 @@ function mockHsk() {
         {
           syllable: 'kao',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3482,7 +3471,7 @@ function mockHsk() {
         {
           syllable: 'kao',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'shi',
@@ -3557,7 +3546,7 @@ function mockHsk() {
         {
           syllable: 'wen',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3572,7 +3561,7 @@ function mockHsk() {
         {
           syllable: 'kou',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3617,7 +3606,7 @@ function mockHsk() {
         {
           syllable: 'lai',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3632,12 +3621,12 @@ function mockHsk() {
         {
           syllable: 'lai',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'dao',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3652,7 +3641,7 @@ function mockHsk() {
         {
           syllable: 'lao',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3667,12 +3656,12 @@ function mockHsk() {
         {
           syllable: 'lao',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'ren',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3687,7 +3676,7 @@ function mockHsk() {
         {
           syllable: 'lao',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'shi',
@@ -3722,7 +3711,7 @@ function mockHsk() {
         {
           syllable: 'lei',
           tone: 4,
-          position: 3,
+          position: 1,
         },
       ],
       translation: {
@@ -3737,7 +3726,7 @@ function mockHsk() {
         {
           syllable: 'leng',
           tone: 3,
-          position: 3,
+          position: 1,
         },
       ],
       translation: {
@@ -3752,7 +3741,7 @@ function mockHsk() {
         {
           syllable: 'li',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3767,7 +3756,7 @@ function mockHsk() {
         {
           syllable: 'li',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'bian',
@@ -3787,7 +3776,7 @@ function mockHsk() {
         {
           syllable: 'liang',
           tone: 3,
-          position: 3,
+          position: 2,
         },
       ],
       translation: {
@@ -3802,7 +3791,7 @@ function mockHsk() {
         {
           syllable: 'ling',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3832,7 +3821,7 @@ function mockHsk() {
         {
           syllable: 'lou',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3847,7 +3836,7 @@ function mockHsk() {
         {
           syllable: 'lou',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'shang',
@@ -3867,7 +3856,7 @@ function mockHsk() {
         {
           syllable: 'lou',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'xia',
@@ -3907,7 +3896,7 @@ function mockHsk() {
         {
           syllable: 'kou',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -3962,7 +3951,7 @@ function mockHsk() {
         {
           syllable: 'ma',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'lu',
@@ -3982,7 +3971,7 @@ function mockHsk() {
         {
           syllable: 'ma',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'shang',
@@ -4017,7 +4006,7 @@ function mockHsk() {
         {
           syllable: 'mai',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4032,7 +4021,7 @@ function mockHsk() {
         {
           syllable: 'man',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4047,7 +4036,7 @@ function mockHsk() {
         {
           syllable: 'mang',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4062,7 +4051,7 @@ function mockHsk() {
         {
           syllable: 'mao',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4077,7 +4066,7 @@ function mockHsk() {
         {
           syllable: 'mei',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4092,7 +4081,7 @@ function mockHsk() {
         {
           syllable: 'mei',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'guan',
@@ -4117,7 +4106,7 @@ function mockHsk() {
         {
           syllable: 'mei',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'shen',
@@ -4142,7 +4131,7 @@ function mockHsk() {
         {
           syllable: 'mei',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'shi',
@@ -4150,9 +4139,9 @@ function mockHsk() {
           position: 2,
         },
         {
-          syllable: 'r',
+          syllable: 'er',
           tone: 5,
-          position: 1,
+          position: 0,
         },
       ],
       translation: {
@@ -4167,12 +4156,12 @@ function mockHsk() {
         {
           syllable: 'mei',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'you',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4187,12 +4176,12 @@ function mockHsk() {
         {
           syllable: 'mei',
           tone: 4,
-          position: 3,
+          position: 1,
         },
         {
           syllable: 'mei',
           tone: 4,
-          position: 3,
+          position: 1,
         },
       ],
       translation: {
@@ -4207,7 +4196,7 @@ function mockHsk() {
         {
           syllable: 'men',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4222,12 +4211,12 @@ function mockHsk() {
         {
           syllable: 'men',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'kou',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4262,7 +4251,7 @@ function mockHsk() {
         {
           syllable: 'men',
           tone: 5,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4277,12 +4266,12 @@ function mockHsk() {
         {
           syllable: 'mi',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'fan',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4297,12 +4286,12 @@ function mockHsk() {
         {
           syllable: 'mian',
           tone: 4,
-          position: 3,
+          position: 2,
         },
         {
           syllable: 'bao',
           tone: 1,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4317,7 +4306,7 @@ function mockHsk() {
         {
           syllable: 'mian',
           tone: 4,
-          position: 3,
+          position: 2,
         },
         {
           syllable: 'tiao',
@@ -4325,9 +4314,9 @@ function mockHsk() {
           position: 2,
         },
         {
-          syllable: 'r',
+          syllable: 'er',
           tone: 5,
-          position: 1,
+          position: 0,
         },
       ],
       translation: {
@@ -4342,7 +4331,7 @@ function mockHsk() {
         {
           syllable: 'ming',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'zi',
@@ -4362,12 +4351,12 @@ function mockHsk() {
         {
           syllable: 'ming',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'bai',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4382,7 +4371,7 @@ function mockHsk() {
         {
           syllable: 'ming',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'nian',
@@ -4402,7 +4391,7 @@ function mockHsk() {
         {
           syllable: 'ming',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'tian',
@@ -4477,7 +4466,7 @@ function mockHsk() {
         {
           syllable: 'er',
           tone: 2,
-          position: 1,
+          position: 0,
         },
       ],
       translation: {
@@ -4572,7 +4561,7 @@ function mockHsk() {
         {
           syllable: 'er',
           tone: 1,
-          position: 1,
+          position: 0,
         },
       ],
       translation: {
@@ -4642,7 +4631,7 @@ function mockHsk() {
         {
           syllable: 'nan',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4657,17 +4646,17 @@ function mockHsk() {
         {
           syllable: 'nan',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'hai',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
-          syllable: 'r',
+          syllable: 'er',
           tone: 5,
-          position: 1,
+          position: 0,
         },
       ],
       translation: {
@@ -4682,17 +4671,17 @@ function mockHsk() {
         {
           syllable: 'nan',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'peng',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'you',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4707,12 +4696,12 @@ function mockHsk() {
         {
           syllable: 'nan',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'ren',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4727,12 +4716,12 @@ function mockHsk() {
         {
           syllable: 'nan',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'sheng',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -4747,7 +4736,7 @@ function mockHsk() {
         {
           syllable: 'nan',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4762,7 +4751,7 @@ function mockHsk() {
         {
           syllable: 'nan',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'bian',
@@ -4782,7 +4771,7 @@ function mockHsk() {
         {
           syllable: 'nan',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4827,7 +4816,7 @@ function mockHsk() {
         {
           syllable: 'ni',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4842,7 +4831,7 @@ function mockHsk() {
         {
           syllable: 'ni',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'men',
@@ -4877,7 +4866,7 @@ function mockHsk() {
         {
           syllable: 'nin',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4892,7 +4881,7 @@ function mockHsk() {
         {
           syllable: 'niu',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'nai',
@@ -4912,7 +4901,7 @@ function mockHsk() {
         {
           syllable: 'nu',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4927,12 +4916,12 @@ function mockHsk() {
         {
           syllable: 'nu',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'er',
           tone: 2,
-          position: 1,
+          position: 0,
         },
       ],
       translation: {
@@ -4947,17 +4936,17 @@ function mockHsk() {
         {
           syllable: 'nü',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'hai',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
-          syllable: 'r',
+          syllable: 'er',
           tone: 5,
-          position: 1,
+          position: 0,
         },
       ],
       translation: {
@@ -4972,17 +4961,17 @@ function mockHsk() {
         {
           syllable: 'nü',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'peng',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'you',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -4997,12 +4986,12 @@ function mockHsk() {
         {
           syllable: 'nü',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'ren',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -5017,12 +5006,12 @@ function mockHsk() {
         {
           syllable: 'nü',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'sheng',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -5037,7 +5026,7 @@ function mockHsk() {
         {
           syllable: 'pang',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'bian',
@@ -5057,7 +5046,7 @@ function mockHsk() {
         {
           syllable: 'pao',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -5072,12 +5061,12 @@ function mockHsk() {
         {
           syllable: 'peng',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'you',
           tone: 5,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -5092,7 +5081,7 @@ function mockHsk() {
         {
           syllable: 'piao',
           tone: 4,
-          position: 3,
+          position: 2,
         },
       ],
       translation: {
@@ -5162,7 +5151,7 @@ function mockHsk() {
         {
           syllable: 'lai',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -5182,7 +5171,7 @@ function mockHsk() {
         {
           syllable: 'che',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -5287,7 +5276,7 @@ function mockHsk() {
         {
           syllable: 'qing',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -5302,7 +5291,7 @@ function mockHsk() {
         {
           syllable: 'qing',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'jia',
@@ -5322,12 +5311,12 @@ function mockHsk() {
         {
           syllable: 'qing',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'jin',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -5342,12 +5331,12 @@ function mockHsk() {
         {
           syllable: 'qing',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'wen',
           tone: 4,
-          position: 4,
+          position: 1,
         },
       ],
       translation: {
@@ -5362,7 +5351,7 @@ function mockHsk() {
         {
           syllable: 'qing',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'zuo',
@@ -5397,7 +5386,7 @@ function mockHsk() {
         {
           syllable: 'qu',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -5412,7 +5401,7 @@ function mockHsk() {
         {
           syllable: 'qu',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'nian',
@@ -5451,7 +5440,7 @@ function mockHsk() {
         {
           syllable: 'ren',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -5466,7 +5455,7 @@ function mockHsk() {
         {
           syllable: 'ren',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'shi',
@@ -5486,7 +5475,7 @@ function mockHsk() {
         {
           syllable: 'ren',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'zhen',
@@ -5556,7 +5545,7 @@ function mockHsk() {
         {
           syllable: 'san',
           tone: 1,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -5611,7 +5600,7 @@ function mockHsk() {
         {
           syllable: 'dian',
           tone: 4,
-          position: 3,
+          position: 2,
         },
       ],
     },
@@ -5646,7 +5635,7 @@ function mockHsk() {
         {
           syllable: 'ban',
           tone: 1,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -5686,7 +5675,7 @@ function mockHsk() {
         {
           syllable: 'che',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -5746,7 +5735,7 @@ function mockHsk() {
         {
           syllable: 'wang',
           tone: 3,
-          position: 3,
+          position: 1,
         },
       ],
     },
@@ -5896,7 +5885,7 @@ function mockHsk() {
         {
           syllable: 'bing',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -6111,7 +6100,7 @@ function mockHsk() {
         {
           syllable: 'shu',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -6126,12 +6115,12 @@ function mockHsk() {
         {
           syllable: 'shu',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'bao',
           tone: 1,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -6146,12 +6135,12 @@ function mockHsk() {
         {
           syllable: 'shu',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'dian',
           tone: 4,
-          position: 3,
+          position: 2,
         },
       ],
     },
@@ -6166,7 +6155,7 @@ function mockHsk() {
         {
           syllable: 'shu',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -6301,7 +6290,7 @@ function mockHsk() {
         {
           syllable: 'song',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -6451,7 +6440,7 @@ function mockHsk() {
         {
           syllable: 'ting',
           tone: 1,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -6466,12 +6455,12 @@ function mockHsk() {
         {
           syllable: 'ting',
           tone: 1,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'dao',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
     },
@@ -6486,7 +6475,7 @@ function mockHsk() {
         {
           syllable: 'ting',
           tone: 1,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'jian',
@@ -6506,7 +6495,7 @@ function mockHsk() {
         {
           syllable: 'ting',
           tone: 1,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'xie',
@@ -6526,7 +6515,7 @@ function mockHsk() {
         {
           syllable: 'tong',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'xue',
@@ -6551,7 +6540,7 @@ function mockHsk() {
         {
           syllable: 'shu',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'guan',
@@ -6931,7 +6920,7 @@ function mockHsk() {
         {
           syllable: 'shou',
           tone: 3,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'jian',
@@ -7031,7 +7020,7 @@ function mockHsk() {
         {
           syllable: 'che',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -7146,7 +7135,7 @@ function mockHsk() {
         {
           syllable: 'sheng',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -7256,7 +7245,7 @@ function mockHsk() {
         {
           syllable: 'peng',
           tone: 2,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'you',
@@ -7281,7 +7270,7 @@ function mockHsk() {
         {
           syllable: 'shi',
           tone: 2,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -7326,7 +7315,7 @@ function mockHsk() {
         {
           syllable: 'sheng',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -7551,7 +7540,7 @@ function mockHsk() {
         {
           syllable: 'sheng',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
     },
@@ -7727,7 +7716,7 @@ function mockHsk() {
         {
           syllable: 'sheng',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -7790,7 +7779,7 @@ function mockHsk() {
           position: 2,
         },
         {
-          syllable: 'r',
+          syllable: 'er',
           tone: 5,
           position: 0,
         },
@@ -7840,7 +7829,7 @@ function mockHsk() {
           position: 1,
         },
         {
-          syllable: 'r',
+          syllable: 'er',
           tone: 5,
           position: 0,
         },
@@ -7862,7 +7851,7 @@ function mockHsk() {
         {
           syllable: 'yang',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -7902,7 +7891,7 @@ function mockHsk() {
         {
           syllable: 'dian',
           tone: 3,
-          position: 3,
+          position: 2,
         },
         {
           syllable: 'er',
@@ -7962,7 +7951,7 @@ function mockHsk() {
         {
           syllable: 'yong',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -7977,7 +7966,7 @@ function mockHsk() {
         {
           syllable: 'you',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -7992,7 +7981,7 @@ function mockHsk() {
         {
           syllable: 'you',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'de',
@@ -8012,12 +8001,12 @@ function mockHsk() {
         {
           syllable: 'you',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'ming',
           tone: 2,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -8032,12 +8021,12 @@ function mockHsk() {
         {
           syllable: 'you',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'shi',
           tone: 2,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'hou',
@@ -8057,7 +8046,7 @@ function mockHsk() {
         {
           syllable: 'you',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'xie',
@@ -8077,12 +8066,12 @@ function mockHsk() {
         {
           syllable: 'you',
           tone: 3,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'yong',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -8097,7 +8086,7 @@ function mockHsk() {
         {
           syllable: 'you',
           tone: 4,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -8112,7 +8101,7 @@ function mockHsk() {
         {
           syllable: 'you',
           tone: 4,
-          position: 2,
+          position: 1,
         },
         {
           syllable: 'bian',
@@ -8132,7 +8121,7 @@ function mockHsk() {
         {
           syllable: 'yu',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {
@@ -8352,7 +8341,7 @@ function mockHsk() {
         {
           syllable: 'zhao',
           tone: 3,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -8367,7 +8356,7 @@ function mockHsk() {
         {
           syllable: 'zhao',
           tone: 3,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'dao',
@@ -8497,7 +8486,7 @@ function mockHsk() {
         {
           syllable: 'zhen',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -8512,7 +8501,7 @@ function mockHsk() {
         {
           syllable: 'zhen',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'de',
@@ -8567,7 +8556,7 @@ function mockHsk() {
         {
           syllable: 'zhi',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'dao',
@@ -8587,12 +8576,12 @@ function mockHsk() {
         {
           syllable: 'zhi',
           tone: 1,
-          position: 1,
+          position: 2,
         },
         {
           syllable: 'shi',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -8732,7 +8721,7 @@ function mockHsk() {
         {
           syllable: 'sheng',
           tone: 1,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -8782,7 +8771,7 @@ function mockHsk() {
         {
           syllable: 'zhu',
           tone: 4,
-          position: 1,
+          position: 2,
         },
       ],
       translation: {
@@ -8922,7 +8911,7 @@ function mockHsk() {
         {
           syllable: 'hao',
           tone: 3,
-          position: 2,
+          position: 1,
         },
       ],
       translation: {

@@ -1,6 +1,6 @@
 import type { InputJsonValue } from '@prisma/client/runtime/library'
 import type { ZodSchema } from 'zod'
-import type { User } from '~/models'
+import type { HieroglyphHsk, User } from '~/models'
 import type {
   LinguisticAnalysisPayload,
   LlvmLinguisticAnalysisSourceType,
@@ -83,8 +83,43 @@ class LlvmService {
         LlvmLinguisticAnalysisSourceTypeSchema,
       )
 
+      const glyphs = sourceType.cn.split('')
+      const hskExamples = await Promise.all(
+        glyphs.map(async (glyph) => {
+          try {
+            const example = await prisma.hieroglyphHsk.findFirst({
+              where: { glyph },
+            })
+            return example
+          }
+          catch (dbError) {
+            console.error(`Ошибка при получении данных из БД для глифа ${glyph}:`, dbError)
+            return null
+          }
+        }),
+      )
+
+      const validHskExamples = hskExamples.filter(example => example !== null)
+      const hieroglyphExamples = validHskExamples.map((example) => {
+        if (example) {
+          return {
+            glyph: example.glyph,
+            pinyin: (example.pinyin as HieroglyphHsk['pinyin']).map(p => ({
+              value: p.syllable,
+              toneType: p.tone,
+              toneIndex: p.position,
+            })),
+            translate: (example.translation as HieroglyphHsk['translation']).ru,
+          }
+        }
+        return null
+      })
+      const hskExamplesString = `
+      ПРИМЕРЫ НЕКОТОРЫХ ЧАСТЕЙ ДАННЫХ:
+      ${JSON.stringify(hieroglyphExamples, null, 2)}
+      `
       const analysisResponse = await createAiRequest(
-        getLinguisticAnalysisPromt({ value: sourceType.cn }),
+        getLinguisticAnalysisPromt({ user: sourceType.cn, system: hskExamplesString }),
         { model: params.model },
       )
       const analysisContent = analysisResponse.choices[0].message.content

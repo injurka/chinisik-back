@@ -31,6 +31,7 @@ class LlvmController extends AController {
       method: 'post',
       path: `${this.path}/split-glyphs`,
       tags: [TAG],
+      security: [{ bearerAuth: [] }],
       request: {
         body: {
           content: {
@@ -39,7 +40,6 @@ class LlvmController extends AController {
             },
           },
         },
-        headers: z.object({ authorization: z.string() }),
       },
       responses: {
         200: {
@@ -68,13 +68,14 @@ class LlvmController extends AController {
   private linguisticAnalysis = () => {
     const BodySchema = z.object({
       value: z.string().max(100).default('打电话'),
-      model: z.enum(AI_MODELS).default('google/gemini-flash-1.5'),
+      model: z.enum(AI_MODELS).default('google/gemini-2.0-flash-001'),
     })
 
     const route = createRoute({
       method: 'post',
       path: `${this.path}/linguistic-analysis`,
       tags: [TAG],
+      security: [{ bearerAuth: [] }],
       request: {
         body: {
           content: {
@@ -83,7 +84,6 @@ class LlvmController extends AController {
             },
           },
         },
-        headers: z.object({ authorization: z.string() }),
       },
       responses: {
         200: {
@@ -130,6 +130,7 @@ class LlvmController extends AController {
       method: 'post',
       path: `${this.path}/pinyin-hieroglyphs`,
       tags: [TAG],
+      security: [{ bearerAuth: [] }],
       request: {
         body: {
           content: {
@@ -138,7 +139,6 @@ class LlvmController extends AController {
             },
           },
         },
-        headers: z.object({ authorization: z.string() }),
       },
       responses: {
         200: {

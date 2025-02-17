@@ -147,6 +147,15 @@ function setupSwagger(server: Hono) {
       .json-schema-2020-12__title {
         color: #fff !important;
       }
+      .scheme-container,
+      .modal-ux {
+        background: var(--bg-color) !important;
+      }
+      .parameters-col_description input,
+      #auth-bearer-value {
+        background: #e2e2f2 !important;
+        color: black !important;
+      }
       </style>
         </head>
         ${SwaggerUI({ url: '/doc' })}
@@ -157,7 +166,9 @@ function setupSwagger(server: Hono) {
   server.doc('/doc', {
     info: { title: 'Chinisik API', version: 'v1' },
     openapi: '3.1.0',
-    security: [{ bearerAuth: [] }],
+    security: [{
+      Bearer: [],
+    }],
   })
 }
 

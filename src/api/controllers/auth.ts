@@ -32,10 +32,7 @@ class AuthController extends AController {
       method: 'get',
       path: `${this.path}/me`,
       tags: [TAG],
-      request: {
-        headers: z.object({ authorization: z.string() }),
-      },
-      security: [{ bearerAuth: ['authorization'] }],
+      security: [{ bearerAuth: [] }],
       responses: {
         200: {
           content: {

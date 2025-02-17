@@ -1,6 +1,5 @@
 import { z } from '@hono/zod-openapi'
 
-// Базовые схемы
 const GrammarRulesSchema = z.object({
   type: z.string(),
   description: z.string(),
@@ -11,8 +10,6 @@ const PinyinSchema = z.object({
   toneIndex: z.number().int().default(0),
   toneType: z.number().int().min(1).max(5).default(5),
 })
-// TODO
-// const PartOfSpeechSchema = z.enum(['verb', 'noun', 'adjective', 'pronoun', 'other', 'particle'])
 const PartOfSpeechSchema = z.string()
 
 // Схемы для ключей

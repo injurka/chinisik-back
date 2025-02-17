@@ -2,11 +2,12 @@ import OpenAI from 'openai'
 
 const AI_DEEPSEEK_MODELS = ['deepseek-chat'] as const
 const AI_OPENROUTER_MODELS = [
-  'deepseek/deepseek-r1-distill-llama-70b',
   'deepseek/deepseek-chat',
   'google/gemini-flash-1.5-8b',
   'google/gemini-flash-1.5',
-  'mistralai/mistral-small-24b-instruct-2501',
+  'google/gemini-2.0-flash-001',
+  'google/gemma-2-27b-it',
+  'liquid/lfm-40b',
 ] as const
 
 const AI_MODELS = [...AI_DEEPSEEK_MODELS, ...AI_OPENROUTER_MODELS] as const

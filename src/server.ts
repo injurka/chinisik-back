@@ -28,6 +28,16 @@ class Server {
 
   private initializeMiddlewares() {
     try {
+      this.server.openAPIRegistry.registerComponent(
+        'securitySchemes',
+        'bearerAuth',
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'JWT Authorization header using the Bearer scheme.',
+        },
+      )
       this.server.use(prettyJSON())
       this.server.use(cors())
       this.server.use(prometheusMiddleware)

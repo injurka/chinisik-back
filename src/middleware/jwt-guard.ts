@@ -3,13 +3,18 @@ import { UserService } from '~/services'
 import { jwtDecode } from '~/utils/jwt'
 
 async function jwtGuard(c: Context, next: Next) {
-  const authHeader = c.req.header('x-authorization') ?? c.req.header('authorization')
+  const authHeader
+    = c.req.header('x-authorization')
+    ?? c.req.header('authorization')
+    ?? c.req.header('Authorization')
 
   if (!authHeader) {
     return c.json({ message: 'Авторизуйтесь для доступа' }, 401)
   }
 
-  const token = authHeader.split(' ')[1]
+  const token = authHeader.startsWith('Bearer ')
+    ? authHeader.split(' ')[1]
+    : authHeader
 
   if (!token) {
     return c.json({ message: 'Токен авторизации не найден' }, 401)

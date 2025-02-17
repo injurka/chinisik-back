@@ -32,12 +32,12 @@ const SignUpUserPayloadSchema = z.object({
 
 const SignInUserPayloadSchema = z.object({
   email: z.string().email().openapi({
-    example: 'user@example.com',
+    example: 'test@test.test',
     description: 'Registered email address',
     format: 'email',
   }),
   password: z.string().min(8).max(20).openapi({
-    example: 'securePassword123!',
+    example: 'testtesttest',
     description: 'Account password',
     minLength: 8,
     maxLength: 20,
