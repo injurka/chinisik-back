@@ -5,8 +5,8 @@ import { jwtDecode } from '~/utils/jwt'
 async function jwtGuard(c: Context, next: Next) {
   const authHeader
     = c.req.header('x-authorization')
-    ?? c.req.header('authorization')
-    ?? c.req.header('Authorization')
+      ?? c.req.header('authorization')
+      ?? c.req.header('Authorization')
 
   if (!authHeader) {
     return c.json({ message: 'Авторизуйтесь для доступа' }, 401)
