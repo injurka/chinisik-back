@@ -2,7 +2,7 @@ import type { SignInUserPayload, SignUpUserPayload } from '~/models/auth'
 import type { User } from '~/models/user'
 import { prisma } from '~/prisma'
 import { sendVerificationCode } from '~/utils/email'
-import { jwtEncode } from '~/utils/jwt'
+import { generateTokens, invalidateTokens, refreshTokens } from '~/utils/tokens'
 
 class AuthService {
   signUp = async (payload: SignUpUserPayload) => {
@@ -16,12 +16,28 @@ class AuthService {
 
     const hashedPassword = await Bun.password.hash(payload.password)
 
-    return prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         email: payload.email,
         password: hashedPassword,
       },
     })
+
+    const transformedUser = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    } as User
+
+    const tokens = await generateTokens(user.id)
+
+    return {
+      token: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      user: transformedUser,
+    }
   }
 
   signIn = async (payload: SignInUserPayload) => {
@@ -40,9 +56,21 @@ class AuthService {
       updatedAt: user.updatedAt,
     } as User
 
-    const token = await jwtEncode({ id: transformedUser.id })
+    const tokens = await generateTokens(user.id)
 
-    return { token, user: transformedUser }
+    return {
+      token: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      user: transformedUser,
+    }
+  }
+
+  refreshToken = async (refreshToken: string) => {
+    return refreshTokens(refreshToken)
+  }
+
+  logout = async (userId: number) => {
+    return invalidateTokens(userId)
   }
 
   createVerificationCode = async (email: string) => {

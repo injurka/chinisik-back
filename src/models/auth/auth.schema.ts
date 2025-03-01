@@ -7,6 +7,10 @@ const AuthUserSchema = z.object({
       example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
       description: 'JWT token for authenticated requests',
     }),
+  refreshToken: z.string().optional().openapi({
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    description: 'JWT refresh token',
+  }),
   user: UserSchema.openapi({
     description: 'Authenticated user details',
   }),
@@ -44,8 +48,22 @@ const SignInUserPayloadSchema = z.object({
   }),
 }).openapi('SignInPayload')
 
+const RefreshAuthSchema = z.object({
+  token: z.string()
+    .openapi({
+      example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+      description: 'JWT token for authenticated requests',
+    }),
+  refreshToken: z.string()
+    .openapi({
+      example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+      description: 'JWT refresh token',
+    }),
+}).openapi('AuthResponse')
+
 export {
   AuthUserSchema,
+  RefreshAuthSchema,
   SignInUserPayloadSchema,
   SignUpUserPayloadSchema,
 }

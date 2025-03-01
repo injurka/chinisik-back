@@ -3,7 +3,8 @@ import { getCookie, setCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
 import AController from '~/api/interfaces/controller.abstract'
 import { jwtGuard } from '~/middleware'
-import { AuthUserSchema, SignInUserPayloadSchema, SignUpUserPayloadSchema } from '~/models/auth'
+import { UserSchema } from '~/models'
+import { AuthUserSchema, RefreshAuthSchema, SignInUserPayloadSchema, SignUpUserPayloadSchema } from '~/models/auth'
 import { AuthService, OAuthService } from '~/services'
 
 const TAG = 'auth'
@@ -15,9 +16,11 @@ class AuthController extends AController {
   constructor() {
     super('/auth')
 
-    this.auth()
+    this.me()
     this.signUp()
     this.signIn()
+    this.refresh()
+    this.logout()
     this.sendVerificationCode()
     this.oauthGithub()
     this.oauthGithubCallback()
@@ -27,7 +30,7 @@ class AuthController extends AController {
 
   // Base Auth
 
-  private auth = () => {
+  private me = () => {
     const route = createRoute({
       method: 'get',
       path: `${this.path}/me`,
@@ -37,7 +40,9 @@ class AuthController extends AController {
         200: {
           content: {
             'application/json': {
-              schema: AuthUserSchema,
+              schema: UserSchema.openapi({
+                description: 'Authenticated user details',
+              }),
             },
           },
           description: 'Auth user',
@@ -50,14 +55,10 @@ class AuthController extends AController {
       route,
       async (c) => {
         const user = c.get('user')
-        const token = c.get('jwt')
 
-        const data = {
-          user,
-          token,
-        }
+        const data = { user }
 
-        return c.json(AuthUserSchema.parse(data), 200)
+        return c.json(UserSchema.parse(data), 200)
       },
     )
   }
@@ -92,7 +93,6 @@ class AuthController extends AController {
       route,
       async (c) => {
         const body = c.req.valid('json')
-
         const data = await this.service.signUp(body)
 
         return c.json(AuthUserSchema.parse(data), 200)
@@ -133,6 +133,81 @@ class AuthController extends AController {
         const data = await this.service.signIn(body)
 
         return c.json(AuthUserSchema.parse(data), 200)
+      },
+    )
+  }
+
+  private refresh = () => {
+    const route = createRoute({
+      method: 'post',
+      path: `${this.path}/refresh`,
+      tags: [TAG],
+      request: {
+        body: {
+          content: {
+            'application/json': {
+              schema: z.object({
+                refreshToken: z.string(),
+              }),
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              schema: RefreshAuthSchema,
+            },
+          },
+          description: 'New token pair',
+        },
+      },
+    })
+
+    this.router.openapi(
+      route,
+      async (c) => {
+        const { refreshToken } = c.req.valid('json')
+
+        try {
+          const tokens = await this.service.refreshToken(refreshToken)
+          const payload = {
+            token: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+          }
+
+          return c.json(RefreshAuthSchema.parse(payload), 200)
+        }
+        catch {
+          throw new HTTPException(401, { message: 'Invalid refresh token' })
+        }
+      },
+    )
+  }
+
+  private logout = () => {
+    const route = createRoute({
+      method: 'post',
+      path: `${this.path}/logout`,
+      tags: [TAG],
+      security: [{ bearerAuth: [] }],
+      responses: {
+        200: {
+          description: 'Successfully logged out',
+        },
+      },
+    })
+
+    this.router.use(route.path, jwtGuard)
+    this.router.openapi(
+      route,
+      async (c) => {
+        const user = c.get('user')
+
+        await this.service.logout(user.id)
+
+        return c.text('Successfully logged out', 200)
       },
     )
   }

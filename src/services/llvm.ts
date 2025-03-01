@@ -116,7 +116,8 @@ class LlvmService {
       })
       const hskExamplesString = `
       ПРИМЕРЫ НЕКОТОРЫХ ЧАСТЕЙ ИЕРОГЛИФОВ:
-      ${JSON.stringify(hieroglyphExamples, null, 2)}
+      ${JSON.stringify(hieroglyphExamples)}
+      `
 
       const analysisResponse = await createAiRequest(
         getLinguisticAnalysisPromt({ user: sourceType.cn, system: hskExamplesString }),

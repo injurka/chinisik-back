@@ -11,11 +11,11 @@ async function jwtDecode(token: string) {
   return decoded
 }
 
-async function jwtEncode(user: JwtPayload) {
+async function jwtEncode(user: JwtPayload, options: { exp: number }) {
   const secret = process.env.JWT_SECRET!
   const jwtPayload = {
     userId: user.id,
-    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // Token expires in 24 hours
+    exp: Math.floor(Date.now() / 1000) + (options.exp ?? (60 * 60 * 24)),
   }
   const token = await sign(jwtPayload, secret)
 
