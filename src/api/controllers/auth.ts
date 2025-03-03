@@ -56,9 +56,7 @@ class AuthController extends AController {
       async (c) => {
         const user = c.get('user')
 
-        const data = { user }
-
-        return c.json(UserSchema.parse(data), 200)
+        return c.json(UserSchema.parse(user), 200)
       },
     )
   }
@@ -132,7 +130,15 @@ class AuthController extends AController {
         const body = c.req.valid('json')
         const data = await this.service.signIn(body)
 
-        return c.json(AuthUserSchema.parse(data), 200)
+        setCookie(c, 'refreshToken', data.refreshToken, {
+          domain: 'localhost  ',
+        })
+
+        setCookie(c, 'accessToken', data.token, {
+          domain: 'localhost',
+        })
+
+        return c.json(AuthUserSchema.parse(data), 200, { 'Set-Cookie': `refreshToken=${data.refreshToken}; Domain: localhost;` })
       },
     )
   }
@@ -177,7 +183,23 @@ class AuthController extends AController {
             refreshToken: tokens.refreshToken,
           }
 
-          return c.json(RefreshAuthSchema.parse(payload), 200)
+          const responseData = RefreshAuthSchema.parse(payload)
+
+          setCookie(c, 'refreshToken', responseData.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            path: '/',
+            sameSite: 'Strict',
+          })
+
+          setCookie(c, 'accessToken', responseData.token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            path: '/',
+            sameSite: 'Strict',
+          })
+
+          return c.json(responseData, 200)
         }
         catch {
           throw new HTTPException(401, { message: 'Invalid refresh token' })
