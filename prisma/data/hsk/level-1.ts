@@ -68,7 +68,13 @@ function mockHsk() {
     {
       glyph: '吧',
       traditionalGlyph: '吧',
-      pinyin: [],
+      pinyin: [
+        {
+          syllable: 'ba',
+          tone: 4,
+          position: 1,
+        },
+      ],
       translation: {
         en: 'particle: used to show mild imperative or uncertainty',
         ru: 'частица: используется для выражения мягкого повеления или неуверенности',
