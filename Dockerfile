@@ -38,7 +38,8 @@ WORKDIR /opt/app
 
 COPY --from=node_modules_prod /opt/app/node_modules node_modules
 COPY --from=dist              /opt/app/dist         dist
-COPY ./static                 static
+# Подключается через `-v /путь/к/вашей/static/папке:/opt/app/static`
+# COPY ./static                 static
 
 ENV CI_COMMIT_TAG=$CI_COMMIT_TAG
 ENV HOST=0.0.0.0

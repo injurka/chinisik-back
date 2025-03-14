@@ -20,6 +20,7 @@ http://localhost:8000/api
 
 ### In order for everything to work correctly, the PostgreSQL database must be up and running.
 
+> inline .env
 ```bash
 docker run -p 5432:5432 \
   --name chinisik-postgres \
@@ -29,6 +30,17 @@ docker run -p 5432:5432 \
   -d \
   --restart always \
   postgres:latest
+```
+
+> file .env
+```bash
+docker run -p 8080:8080 \                                     
+  --name chinisik-back \
+  --env-file .env \
+  -v /root/sources/chinisik-back/static:/opt/app/static \
+  -d \
+  --restart always \
+  chinisik-back
 ```
 
 After launching, perform migrations and seeding of all data, this can be done by writing:
