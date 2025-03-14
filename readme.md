@@ -42,8 +42,10 @@ docker run -p 8080:8080 \
   -v /root/sources/chinisik-back/static:/opt/app/static \
   -d \
   --restart always \
-  chinisik-back
+  chinisik-back:v24
 ```
+
+
 
 After launching, perform migrations and seeding of all data, this can be done by writing:
 
