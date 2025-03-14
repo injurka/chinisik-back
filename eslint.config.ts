@@ -6,4 +6,5 @@ export default config({
     'unicorn/prefer-node-protocol': 'off',
     'node/prefer-global/process': 'off',
   },
+  ignores: ['static', 'prisma'],
 })

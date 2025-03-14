@@ -21,6 +21,7 @@ http://localhost:8000/api
 ### In order for everything to work correctly, the PostgreSQL database must be up and running.
 
 > inline .env
+
 ```bash
 docker run -p 5432:5432 \
   --name chinisik-postgres \
@@ -33,8 +34,9 @@ docker run -p 5432:5432 \
 ```
 
 > file .env
+
 ```bash
-docker run -p 8080:8080 \                                     
+docker run -p 8080:8080 \
   --name chinisik-back \
   --env-file .env \
   -v /root/sources/chinisik-back/static:/opt/app/static \
