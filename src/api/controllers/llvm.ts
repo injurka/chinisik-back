@@ -5,7 +5,7 @@ import { LlvmLinguisticAnalysisSchema, ToneTypeSchema } from '~/models'
 import { PinyinHieroglyphsSchema } from '~/models/llvm/pinyin-hieroglyphs.schema'
 import { SplitedGlyphsSchema } from '~/models/llvm/splited-glyphs.schema'
 import { LlvmService } from '~/services'
-import { AI_MODELS } from '~/utils/ai'
+import { AI_MODELS } from '~/utils/ai/request'
 import { validPinyinSyllables } from '~/utils/constant'
 
 const TAG = 'llvm'

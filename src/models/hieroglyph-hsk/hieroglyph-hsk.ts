@@ -2,7 +2,7 @@ import type { ToneType } from '../shared'
 
 interface HieroglyphHsk {
   id: number
-  glyph?: string | null
+  glyph: string
   traditionalGlyph: ToneType
   translation: {
     en: string

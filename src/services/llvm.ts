@@ -1,6 +1,6 @@
 import type { InputJsonValue } from '@prisma/client/runtime/library'
 import type { ZodSchema } from 'zod'
-import type { HieroglyphHsk, User } from '~/models'
+import type { User } from '~/models'
 import type {
   LinguisticAnalysisPayload,
   LlvmLinguisticAnalysisSourceType,
@@ -16,7 +16,8 @@ import {
 } from '~/models/llvm'
 import { prisma } from '~/prisma'
 import { logger } from '~/server'
-import { createAiRequest } from '~/utils/ai'
+import { createAiEmbeddingsRequest, loadOrCreateEmbeddings } from '~/utils/ai/embeddings'
+import { createAiChatRequest } from '~/utils/ai/request'
 import {
   getLinguisticAnalysisPromt,
   getLinguisticAnalysisTypePromt,
@@ -46,7 +47,7 @@ class LlvmService {
 
   async splitGlyphs(params: SplitGlyphsPayload) {
     const { system, user } = getSplitGlyphsPromt(params)
-    const response = await createAiRequest({ system, user })
+    const response = await createAiChatRequest({ system, user })
     const rawData = response.choices[0].message.content?.trim()
 
     try {
@@ -71,56 +72,83 @@ class LlvmService {
       let totalTokens = 0
       const startTime = performance.now()
 
-      const sourceTypeResponse = await createAiRequest(
+      const sourceTypeResponse = await createAiChatRequest(
         getLinguisticAnalysisTypePromt(params),
         { model: params.model },
       )
+      const sourceTypeContent = sourceTypeResponse.choices[0].message.content
       totalTokens += sourceTypeResponse?.usage?.total_tokens ?? 0
 
-      const sourceTypeContent = sourceTypeResponse.choices[0].message.content
       const sourceType = await this.processAiResponse<LlvmLinguisticAnalysisSourceType>(
         sourceTypeContent,
         LlvmLinguisticAnalysisSourceTypeSchema,
       )
+      const glyphs = sourceType.cn.trim()
 
-      const glyphs = sourceType.cn.split('')
-      const hskExamples = await Promise.all(
-        glyphs.map(async (glyph) => {
-          try {
-            const example = await prisma.hieroglyphHsk.findFirst({
-              where: { glyph },
-            })
-            return example
-          }
-          catch (dbError) {
-            console.error(`Ошибка при получении данных из БД для глифа ${glyph}:`, dbError)
-            return null
-          }
-        }),
-      )
+      // Загрузка эмбеддингов
+      const embeddings = await loadOrCreateEmbeddings()
 
-      const validHskExamples = hskExamples.filter(example => example !== null)
-      const hieroglyphExamples = validHskExamples.map((example) => {
-        if (example) {
-          return {
-            glyph: example.glyph,
-            pinyin: (example.pinyin as HieroglyphHsk['pinyin']).map(p => ({
-              value: p.syllable,
-              toneType: p.tone,
-              toneIndex: p.position,
-            })),
-            translate: (example.translation as HieroglyphHsk['translation']).ru,
-          }
+      // Получение эмбеддинга для входного текста
+      const inputEmbedding = await createAiEmbeddingsRequest(glyphs)
+
+      function cosineSimilarity(vecA: number[], vecB: number[]) {
+        const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0)
+        const normA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0))
+        const normB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0))
+
+        return dotProduct / (normA * normB)
+      }
+
+      // Поиск похожих примеров
+      // Создание объединенного массива из hsk и keys для поиска
+      const allItems = [...embeddings.hsk, ...embeddings.keys]
+
+      const similarities = allItems.map((item: any) => {
+        const itemEmbedding = item.embedding.data[0].embedding
+        const similarity = cosineSimilarity(inputEmbedding.data[0].embedding, itemEmbedding)
+
+        return {
+          glyph: item.glyph,
+          ru: item.translation?.ru || item.translate || '',
+          cn: item.glyph,
+          type: item.traditionalGlyph !== undefined ? 'hsk' : 'key',
+          pinyin: item.pinyin && Array.isArray(item.pinyin)
+            ? item.pinyin.map((p: any) => ({
+                value: p.syllable,
+                toneType: p.tone,
+                toneIndex: p.position,
+
+              }))
+            : {
+                value: item.pinyin,
+                toneType: item.toneType,
+                toneIndex: item.toneIndex,
+              },
+
+          similarity,
         }
-        return null
       })
-      const hskExamplesString = `
-      ПРИМЕРЫ НЕКОТОРЫХ ЧАСТЕЙ ИЕРОГЛИФОВ:
-      ${JSON.stringify(hieroglyphExamples)}
+
+      // Получение топ-5 похожих примеров
+      const topSimilar = similarities
+        .sort((a, b) => b.similarity - a.similarity)
+        .slice(0, 5)
+
+      // Формирование контекста для LLM на основе найденных похожих примеров
+      const context = topSimilar.map(item => `
+        Русский: "${item.ru}", 
+        Китайский: "${item.cn}", 
+        Тип: ${item.type}, 
+        Пиньинь: ${JSON.stringify(item.pinyin)}`,
+      ).join('\n')
+
+      const systemPrompt = `
+      ПРИМЕРЫ ПОХОЖИХ ИЕРОГЛИФОВ (СЛОВ) ДЛЯ ТЕКУЩЕГО ЗАПРОСА:
+      ${context}
       `
 
-      const analysisResponse = await createAiRequest(
-        getLinguisticAnalysisPromt({ user: sourceType.cn, system: hskExamplesString }),
+      const analysisResponse = await createAiChatRequest(
+        getLinguisticAnalysisPromt({ user: sourceType.cn, system: systemPrompt }),
         { model: params.model },
       )
       const analysisContent = analysisResponse.choices[0].message.content
@@ -165,7 +193,7 @@ class LlvmService {
 
   async pinyinHieroglyphs(params: PinyinHieroglyphsPayload) {
     const prompt = getPinyinHieroglyphsPromt(params)
-    const response = await createAiRequest(prompt)
+    const response = await createAiChatRequest(prompt)
     const content = response.choices[0].message.content?.trim()
 
     return this.processAiResponse(
