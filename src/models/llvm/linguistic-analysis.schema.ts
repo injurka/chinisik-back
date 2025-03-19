@@ -5,11 +5,6 @@ const GrammarRulesSchema = z.object({
   description: z.string(),
   example: z.string().optional(),
 })
-const PinyinSchema = z.object({
-  value: z.string(),
-  toneIndex: z.number().int().default(0),
-  toneType: z.number().int().min(1).max(5).default(5),
-})
 const PartOfSpeechSchema = z.string()
 
 // Схемы для ключей
@@ -56,7 +51,7 @@ const KeySchema = z.object({
   position: KeyPositionSchema,
   role: KeyRoleSchema,
   translate: z.string().optional(),
-  pinyin: z.array(PinyinSchema),
+  pinyin: z.string(),
   description: z.string().optional(),
   keyInfo: z.object({
     number: z.number(),
@@ -69,7 +64,7 @@ const KeySchema = z.object({
 const HieroglyphSchema = z.object({
   type: z.literal('hieroglyph'),
   glyph: z.string(),
-  pinyin: z.array(PinyinSchema),
+  pinyin: z.string(),
   partOfSpeech: PartOfSpeechSchema,
   translate: z.string(),
   transcription: z.string(),
@@ -84,7 +79,7 @@ const HieroglyphSchema = z.object({
 const WordSchema = z.object({
   type: z.literal('word'),
   glyph: z.string(),
-  pinyin: z.array(PinyinSchema),
+  pinyin: z.string(),
   partOfSpeech: PartOfSpeechSchema,
   translate: z.string(),
   transcription: z.string(),
@@ -100,7 +95,7 @@ const SentenceSchema = z.object({
     description: z.string(),
   }),
   glyph: z.string(),
-  pinyin: z.array(PinyinSchema),
+  pinyin: z.string(),
   translate: z.string(),
   transcription: z.string(),
   grammarRules: z.array(GrammarRulesSchema).optional(),

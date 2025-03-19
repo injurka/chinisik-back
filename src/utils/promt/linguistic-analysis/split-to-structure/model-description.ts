@@ -14,20 +14,16 @@ const modelDescription = `
   description: string,
   example?: string
 }
-- Pinyin: {
-  value: string, // Плоский текст без тона
-  toneType: 1|2|3|4|5, // Пример тона: 1 → первый тон ... 5 -> без тона. По умолчанию значение - 5
-  toneIndex: number // Индекс позиции тона в слоге, например '是(shì)' s-0, h-1, i-2, тон будет указан как 2, потому стоит на букве 'i'
-}
-- PartOfSpeech: string // На русском языке
+- Pinyin: string // Строка, содержащая пиньинь **ТОЛЬКО** с указанием тонов цифрами. Пример: "da3 dia4n hua4". Строка состоит из слогов, разделенных пробелами. Тон каждого слога обозначается цифрой после слога (1, 2, 3, 4, 5, где 5 означает нейтральный тон). **Недопустимо использование диакритических знаков (тонов над гласными).**
+- PartOfSpeech: string // Часть речи на русском языке
 
 - Sentence: {
   type: 'sentence',
   structure: {type: string, description: string},
   glyph: string,
-  pinyin: Array<Pinyin>,
-  translate: string,
-  transcription: string,
+  pinyin: string,
+  translate: string, // Перевод на литературный русский язык
+  transcription: string, // Практическая запись произношения слова (не научная транскрипция), пример: "да диан хуа"
   grammarRules: Array<GrammarRules>,
   description: string,
   components: Array<Word|Hieroglyph>
@@ -36,28 +32,28 @@ const modelDescription = `
 - Word: {
   type: 'word',
   glyph: string,
-  pinyin: Array<Pinyin>,
+  pinyin: string,
   partOfSpeech: PartOfSpeech,
-  translate: string,
-  transcription: string,
+  translate: string, // Перевод на литературный русский язык
+  transcription: string, // Практическая запись произношения слова (не научная транскрипция), пример: "да диан хуа"
   grammarRules: Array<GrammarRules>,
-  hints: string[],
+  hints: string[], // Полезные советы или дополнительная информация, связанная с текущим словом.
   hieroglyphs: Array<Hieroglyph|Word>
 }
 
 - Hieroglyph: {
   type: 'hieroglyph',
   glyph: string,
-  pinyin: Array<Pinyin>,
+  pinyin: string,
   partOfSpeech: PartOfSpeech,
-  translate: string,
-  transcription: string,
+  translate: string, // Перевод на литературный русский язык
+  transcription: string, // Практическая запись произношения слова (не научная транскрипция), пример: "да диан хуа"
   strokeCount: number,
   etymology: string,
   mnemonic: string,
   keys: Array<Key>,
   grammarRules: Array<GrammarRules>,
-  hints: string[]
+  hints: string[] // Полезные советы или дополнительная информация, связанная с текущим иероглифом.
 }
 
 - KeyPosition: 'left'|'right'|'top'|'bottom'|'full-surround'|'top-surround'|'bottom-surround'|'left-surround'|'overlaid'|'center'|'inside'|'diagonal'|'top-left'|'top-right'|'bottom-left'|'bottom-right'|'cross'|'floating'
@@ -69,20 +65,20 @@ const modelDescription = `
   role: KeyRole,
   translate: string,
   hints: string[]
-  keyInfo: {
-    number: number, // Важно, чтобы это были индекс иероглифа и из набора 214 ключей словаря Канси.
+  keyInfo: { //Содержит информацию, если ключ входит в набор из 214 ключей Канси
+    number: number, // Индекс иероглифа из набора 214 ключей словаря Канси.
     name: string,
     variants: string[],
     frequencyRank: number
   } | null,
-  pinyin: Array<Pinyin>,
+  pinyin: string,
 }
 
 # Правила:
 - Только допустимые значения для enum-полей
 - Любые знаки должны быть исключены из поля "components" и не учитываются при разборе на состовляющие
-- keyInfo = null если компонент не из 214 ключей Канси
-- Танскрипция и перевод должны быть только на русском языке". Примеры транскрипции: "да диан хуа"
+- keyInfo = null если компонент не из 214 ключей Канси. **Ключи Канси** - это набор из 214 иероглифов, используемых в китайских словарях в качестве основы для классификации иероглифов.
+- Танскрипция и перевод должны быть только на русском языке. Примеры транскрипции: "да диан хуа"
 - Строгий JSON-синтаксис:
   * Все массивы должны быть правильно закрыты квадратными скобками []
   * Все объекты должны быть правильно закрыты фигурными скобками {}
@@ -95,6 +91,7 @@ const modelDescription = `
    - Если в слоге одна гласная - тон ставится над ней
    - Если в слоге несколько гласных: Для a, e, o - тон ставится над первой из них, для других комбинаций - тон ставится над последней гласной
    - В дифтонгах ui и iu тон ставится над u
+  * **ВНИМАНИЕ! В поле *Pinyin* тона обозначаются только цифрами после слога, никаких диакритических знаков над гласными!**
 `
 
 export { modelDescription }
