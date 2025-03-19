@@ -1,12 +1,11 @@
 import type { GitHubEmail, GitHubNormalizedUser, GitHubTokenData, GitHubUser, GoogleNormalizedUser, GoogleTokenData, GoogleUser } from '~/models'
 import { HTTPException } from 'hono/http-exception'
 import {
-
   normalizeGitHubUser,
   normalizeGoogleUser,
 } from '~/models'
 import { prisma } from '~/prisma'
-import { jwtEncode } from '~/utils/jwt'
+import { generateTokens } from '~/utils/tokens'
 
 class OAuthService {
   github = async (code: string, state: string) => {
@@ -76,17 +75,15 @@ class OAuthService {
       userId = id
     }
     else if (emailExistingUser) {
-      const { id } = await prisma.user.create({
+      const { id } = await prisma.user.update({
+        where: {
+          id: emailExistingUser.id,
+        },
         data: {
           githubId: normalizedUser.id,
-          name: normalizedUser.name,
-          avatarUrl: normalizedUser.avatarUrl,
-          UserPermission: {
-            create: [{ permission: 'AiGenerate' }],
-          },
-        },
-        include: {
-          UserPermission: true,
+          name: normalizedUser.name || emailExistingUser.name,
+          avatarUrl: normalizedUser.avatarUrl || emailExistingUser.avatarUrl,
+          updatedAt: new Date(),
         },
       })
       userId = id
@@ -109,9 +106,9 @@ class OAuthService {
       userId = id
     }
 
-    const token = await jwtEncode({ id: userId })
+    const { accessToken: token, refreshToken } = await generateTokens(userId)
 
-    return token
+    return { token, refreshToken }
   }
 
   google = async (code: string, _: string) => {
@@ -169,17 +166,15 @@ class OAuthService {
       userId = id
     }
     else if (emailExistingUser) {
-      const { id } = await prisma.user.create({
+      const { id } = await prisma.user.update({
+        where: {
+          id: emailExistingUser.id,
+        },
         data: {
           googleId: normalizedUser.id,
-          name: normalizedUser.name,
-          avatarUrl: normalizedUser.avatarUrl,
-          UserPermission: {
-            create: [{ permission: 'AiGenerate' }],
-          },
-        },
-        include: {
-          UserPermission: true,
+          name: normalizedUser.name || emailExistingUser.name,
+          avatarUrl: normalizedUser.avatarUrl || emailExistingUser.avatarUrl,
+          updatedAt: new Date(),
         },
       })
       userId = id
@@ -202,9 +197,9 @@ class OAuthService {
       userId = id
     }
 
-    const token = await jwtEncode({ id: userId })
+    const { accessToken: token, refreshToken } = await generateTokens(userId)
 
-    return token
+    return { token, refreshToken }
   }
 }
 

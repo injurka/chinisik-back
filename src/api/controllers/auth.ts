@@ -93,6 +93,15 @@ class AuthController extends AController {
         const body = c.req.valid('json')
         const data = await this.service.signUp(body)
 
+        // Устанавливаем cookie для refresh token с правильными параметрами
+        setCookie(c, 'refreshToken', data.refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          path: '/',
+          sameSite: 'Lax',
+          maxAge: 30 * 24 * 60 * 60, // 30 дней
+        })
+
         return c.json(AuthUserSchema.parse(data), 200)
       },
     )
@@ -130,15 +139,7 @@ class AuthController extends AController {
         const body = c.req.valid('json')
         const data = await this.service.signIn(body)
 
-        setCookie(c, 'refreshToken', data.refreshToken, {
-          domain: 'localhost  ',
-        })
-
-        setCookie(c, 'accessToken', data.token, {
-          domain: 'localhost',
-        })
-
-        return c.json(AuthUserSchema.parse(data), 200, { 'Set-Cookie': `refreshToken=${data.refreshToken}; Domain: localhost;` })
+        return c.json(AuthUserSchema.parse(data), 200)
       },
     )
   }
@@ -185,20 +186,6 @@ class AuthController extends AController {
 
           const responseData = RefreshAuthSchema.parse(payload)
 
-          setCookie(c, 'refreshToken', responseData.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            path: '/',
-            sameSite: 'Strict',
-          })
-
-          setCookie(c, 'accessToken', responseData.token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            path: '/',
-            sameSite: 'Strict',
-          })
-
           return c.json(responseData, 200)
         }
         catch {
@@ -228,6 +215,12 @@ class AuthController extends AController {
         const user = c.get('user')
 
         await this.service.logout(user.id)
+
+        // Очищаем cookie при выходе
+        setCookie(c, 'refreshToken', '', {
+          expires: new Date(0),
+          path: '/',
+        })
 
         return c.text('Successfully logged out', 200)
       },
@@ -301,7 +294,12 @@ class AuthController extends AController {
         url.searchParams.set('state', state)
         url.searchParams.set('scope', 'user:email')
 
-        c.header('Set-Cookie', `oauth_state=${state}; HttpOnly; Path=/; SameSite=Lax`)
+        setCookie(c, 'oauth_state', state, {
+          httpOnly: true,
+          path: '/',
+          sameSite: 'Lax',
+          maxAge: 10 * 60, // 10 минут
+        })
 
         return c.redirect(url.toString())
       },
@@ -328,22 +326,18 @@ class AuthController extends AController {
         },
       },
     })
-
     this.router.openapi(
       route,
       async (c) => {
         const { code, state } = c.req.valid('query')
-
         const savedState = getCookie(c, 'oauth_state')
         if (!state || state !== savedState) {
           throw new HTTPException(401, { message: 'Invalid state' })
         }
-
-        const token = await this.oauthService.github(code, state)
-
+        const { token, refreshToken } = await this.oauthService.github(code, state)
         setCookie(c, 'oauth_state', '', { expires: new Date(0), path: '/' })
 
-        return c.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`)
+        return c.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}&refreshToken=${refreshToken}`)
       },
     )
   }
@@ -379,8 +373,14 @@ class AuthController extends AController {
         url.searchParams.set('state', state)
         url.searchParams.set('scope', 'openid email profile')
         url.searchParams.set('access_type', 'offline')
+        url.searchParams.set('prompt', 'consent') // Добавлено для получения refresh token каждый раз
 
-        c.header('Set-Cookie', `oauth_state=${state}; HttpOnly; Path=/; SameSite=Lax`)
+        setCookie(c, 'oauth_state', state, {
+          httpOnly: true,
+          path: '/',
+          sameSite: 'Lax',
+          maxAge: 10 * 60, // 10 минут
+        })
 
         return c.redirect(url.toString())
       },
@@ -407,22 +407,18 @@ class AuthController extends AController {
         },
       },
     })
-
     this.router.openapi(
       route,
       async (c) => {
         const { code, state } = c.req.valid('query')
         const savedState = getCookie(c, 'oauth_state')
-
         if (!state || state !== savedState) {
           throw new HTTPException(401, { message: 'Invalid state' })
         }
-
-        const token = await this.oauthService.google(code, state)
-
+        const { token, refreshToken } = await this.oauthService.google(code, state)
         setCookie(c, 'oauth_state', '', { expires: new Date(0), path: '/' })
 
-        return c.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`)
+        return c.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}&refreshToken=${refreshToken}`)
       },
     )
   }
