@@ -28,7 +28,7 @@ model User {
   @@map(name: "user")
 
   refreshTokens RefreshToken[]
-  LinguisticAnalysisAll LinguisticAnalysisAll[]
+  LinguisticAnalysisBase LinguisticAnalysisBase[]
   LinguisticAnalysisError LinguisticAnalysisError[]
 }
 
@@ -44,7 +44,6 @@ model RefreshToken {
   @@index([userId])
   @@map(name: "refresh_tokens")
 }
-
 
 model UserPermission {
   id         Int        @id @unique @default(autoincrement())
@@ -199,7 +198,7 @@ model SplitGlyphsSentenceHieroglyphs {
 
 //* ==== LinguisticAnalysis ======================================================== *//
 
-model LinguisticAnalysisAll {
+model LinguisticAnalysisBase {
   id                 Int    @id @unique @default(autoincrement())
   type               String
   userId             Int
@@ -208,16 +207,41 @@ model LinguisticAnalysisAll {
   glyph              String
   totalTokens        Int
   generationDuration Int
+  dataType           LinguisticAnalysisDataType
   
-  data          Json
-
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   User User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  jsonAnalysis     LinguisticAnalysisJson?
+  markdownAnalysis LinguisticAnalysisMarkdown?
+
   @@index([userId])
-  @@map(name: "linguistic_nalysis_all")
+  @@map(name: "linguistic_analysis_base")
+}
+
+model LinguisticAnalysisJson {
+  id                 Int    @id @unique
+  data               Json
+
+  base               LinguisticAnalysisBase @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@map(name: "linguistic_analysis_json")
+}
+
+model LinguisticAnalysisMarkdown {
+  id                 Int    @id @unique
+  data               String
+
+  base               LinguisticAnalysisBase @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@map(name: "linguistic_analysis_markdown")
+}
+
+enum LinguisticAnalysisDataType {
+  Markdown
+  Json
 }
 
 model LinguisticAnalysisError {
@@ -305,3 +329,4 @@ model PinyinInitialsFinals {
 enum Permission {
   AiGenerate
 }
+

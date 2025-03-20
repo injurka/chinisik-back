@@ -7,6 +7,12 @@ interface LinguisticAnalysisPayload {
   model: AiModel
 }
 
+interface LinguisticAnalysisFlatPayload {
+  value: string
+  model: AiModel
+  isTemplate: boolean
+}
+
 interface SplitGlyphsPayload {
   type: SplitGlyphsType
   glyphs: string
@@ -19,6 +25,7 @@ interface PinyinHieroglyphsPayload {
 }
 
 export type {
+  LinguisticAnalysisFlatPayload,
   LinguisticAnalysisPayload,
   PinyinHieroglyphsPayload,
   SplitGlyphsPayload,

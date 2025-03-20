@@ -19,6 +19,7 @@ class LlvmController extends AController {
     this.splitGlyphs()
     this.pinyinHieroglyphs()
     this.linguisticAnalysis()
+    this.linguisticAnalysisFlat()
   }
 
   private splitGlyphs = () => {
@@ -107,6 +108,55 @@ class LlvmController extends AController {
         const user = c.get('user')
 
         const data = await this.service.linguisticAnalysis(body, user)
+
+        return c.json(data, 200)
+      },
+    )
+  }
+
+  private linguisticAnalysisFlat = () => {
+    const BodySchema = z.object({
+      value: z.string().max(100).default('打电话'),
+      model: z.enum(AI_MODELS).default('google/gemini-2.0-flash-001'),
+      isTemplate: z.boolean().default(true),
+    })
+
+    const route = createRoute({
+      method: 'post',
+      path: `${this.path}/linguistic-analysis-flat`,
+      tags: [TAG],
+      security: [{ bearerAuth: [] }],
+      request: {
+        body: {
+          content: {
+            'application/json': {
+              schema: BodySchema,
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              schema: z.string(),
+            },
+          },
+          description: `
+Анализатор китайского языка, преобразующий текст в подробную структуру данных.
+          `,
+        },
+      },
+    })
+
+    this.router.use(route.path, jwtGuard)
+    this.router.openapi(
+      route,
+      async (c) => {
+        const body = c.req.valid('json')
+        const user = c.get('user')
+
+        const data = await this.service.linguisticAnalysisFlat(body, user)
 
         return c.json(data, 200)
       },

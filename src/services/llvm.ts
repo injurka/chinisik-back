@@ -2,12 +2,14 @@ import type { InputJsonValue } from '@prisma/client/runtime/library'
 import type { ZodSchema } from 'zod'
 import type { User } from '~/models'
 import type {
+  LinguisticAnalysisFlatPayload,
   LinguisticAnalysisPayload,
   LlvmLinguisticAnalysisSourceType,
   PinyinHieroglyphsPayload,
   SplitGlyphsPayload,
 } from '~/models/llvm'
 import { HTTPException } from 'hono/http-exception'
+import { z } from 'zod'
 import {
   LlvmLinguisticAnalysisSchema,
   LlvmLinguisticAnalysisSourceTypeSchema,
@@ -19,12 +21,13 @@ import { logger } from '~/server'
 import { createAiEmbeddingsRequest, loadOrCreateEmbeddings } from '~/utils/ai/embeddings'
 import { createAiChatRequest } from '~/utils/ai/request'
 import {
+  getLinguisticAnalysisMdPromt,
   getLinguisticAnalysisPromt,
-
   getLinguisticAnalysisTypePromt,
 } from '~/utils/promt/linguistic-analysis'
 import { getPrompt as getPinyinHieroglyphsPromt } from '~/utils/promt/pinyin-hieroglyphs'
 import { getPrompt as getSplitGlyphsPromt } from '~/utils/promt/split-glyphs'
+import { LinguisticAnalysisService } from './linguistic-analysis'
 
 interface Item {
   glyph: string
@@ -212,20 +215,75 @@ class LlvmService {
       const endTime = performance.now()
       const generationDuration = Math.round((endTime - startTime) / 1000)
 
-      await prisma.linguisticAnalysisAll.create({
-        data: {
-          userId: user.id,
-          model: params.model,
-          totalTokens,
-          sourceValue: params.value,
-          type: sourceType.type,
-          glyph: sourceType.cn,
-          data: response as InputJsonValue,
-          generationDuration,
-        },
+      new LinguisticAnalysisService().createJsonAnalysisRecord({
+        userId: user.id,
+        model: params.model,
+        totalTokens,
+        sourceValue: params.value,
+        type: sourceType.type,
+        glyph: sourceType.cn,
+        jsonData: response as InputJsonValue,
+        generationDuration,
       })
 
       return LlvmLinguisticAnalysisSchema.parse(response)
+    }
+    catch (error) {
+      await prisma.linguisticAnalysisError.create({
+        data: {
+          userId: user.id,
+          model: params.model,
+          sourceValue: params.value,
+          error: JSON.stringify((error as any).message ?? error),
+        },
+      })
+
+      throw error
+    }
+  }
+
+  async linguisticAnalysisFlat(params: LinguisticAnalysisFlatPayload, user: User) {
+    try {
+      let totalTokens = 0
+      const startTime = performance.now()
+
+      const sourceTypeResponse = await createAiChatRequest(
+        getLinguisticAnalysisTypePromt(params),
+        { model: params.model },
+      )
+      const sourceTypeContent = sourceTypeResponse.choices[0].message.content
+      totalTokens += sourceTypeResponse?.usage?.total_tokens ?? 0
+
+      const sourceType = await this.processAiResponse<LlvmLinguisticAnalysisSourceType>(
+        sourceTypeContent,
+        LlvmLinguisticAnalysisSourceTypeSchema,
+      )
+      const glyphs = sourceType.cn.trim()
+
+      const analysisResponse = await createAiChatRequest(
+        getLinguisticAnalysisMdPromt({ user: glyphs }, params.isTemplate),
+        { model: params.model, response_format: { type: 'text' } },
+      )
+      const analysisContent = analysisResponse.choices[0].message.content
+      totalTokens += analysisResponse?.usage?.total_tokens ?? 0
+
+      const response = z.string().parse(analysisContent).replaceAll('```markdown', '').replaceAll('```', '')
+
+      const endTime = performance.now()
+      const generationDuration = Math.round((endTime - startTime) / 1000)
+
+      new LinguisticAnalysisService().createMarkdownAnalysisRecord({
+        userId: user.id,
+        model: params.model,
+        totalTokens,
+        sourceValue: params.value,
+        type: sourceType.type,
+        glyph: sourceType.cn,
+        markdownData: response,
+        generationDuration,
+      })
+
+      return z.string().parse(response)
     }
     catch (error) {
       await prisma.linguisticAnalysisError.create({
