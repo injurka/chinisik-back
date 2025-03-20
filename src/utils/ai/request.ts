@@ -1,13 +1,21 @@
 import OpenAI from 'openai'
 
-const AI_DEEPSEEK_MODELS = ['deepseek-chat'] as const
+const AI_HUBMIX_MODELS = [
+  'gemini-2.0-flash-lite',
+  'gemini-2.0-flash',
+  'gemini-2.0-flash-search',
+  'gemini-2.0-pro-exp-02-05',
+  'gemini-2.0-pro-exp-02-05-search',
+  'Doubao-1.5-lite-32k',
+  'Doubao-1.5-pro-32k',
+  'Doubao-1.5-pro-256k',
+] as const
 const AI_OPENROUTER_MODELS = [
   'google/gemini-2.0-flash-001',
   'google/gemini-2.0-flash-lite-001',
-  'google/gemma-3-27b-it',
 ] as const
 
-const AI_MODELS = [...AI_DEEPSEEK_MODELS, ...AI_OPENROUTER_MODELS] as const
+const AI_MODELS = [...AI_HUBMIX_MODELS, ...AI_OPENROUTER_MODELS] as const
 
 type AiModel = typeof AI_MODELS[number]
 
@@ -23,11 +31,11 @@ interface ProviderConfig {
 }
 
 function getProviderConfig(model: AiModel): ProviderConfig {
-  const isDeepSeek = AI_DEEPSEEK_MODELS.includes(model as typeof AI_DEEPSEEK_MODELS[number])
+  const isHubMix = AI_HUBMIX_MODELS.includes(model as typeof AI_HUBMIX_MODELS[number])
 
   return {
-    apiKey: isDeepSeek ? process.env.AI_DEEP_SEEK_KEY : process.env.AI_OPEN_ROUTER_KEY,
-    baseURL: isDeepSeek ? process.env.AI_DEEP_SEEK_API_URL : process.env.AI_OPEN_ROUTER_API_URL,
+    apiKey: isHubMix ? process.env.AI_HUBMIX_KEY : process.env.AI_OPEN_ROUTER_KEY,
+    baseURL: isHubMix ? process.env.AI_HUBMIX_API_URL : process.env.AI_OPEN_ROUTER_API_URL,
   }
 }
 
@@ -43,7 +51,7 @@ async function createAiChatRequest(
   options?: AiRequestOptions,
 ) {
   const mergedOptions = {
-    model: 'deepseek-chat',
+    model: 'google/gemini-2.0-flash-001',
     response_format: { type: 'json_object' },
     temperature: 0.4,
     ...options,
@@ -69,6 +77,20 @@ async function createAiChatRequest(
     response_format: mergedOptions.response_format,
     temperature: mergedOptions.temperature,
     stream: false,
+    web_search_options: mergedOptions.model.includes('search')
+      ? {
+        user_location: {
+          approximate: {
+            city: '北京', // Пекин
+            country: '中国', // Китай
+            region: '北京', // Пекин (регион/провинция)
+            timezone: 'Asia/Shanghai', // Шанхайский часовой пояс (обычно используется для всего Китая)
+          },
+          type: 'approximate',
+        },
+
+      }
+      : undefined,
   })
 }
 

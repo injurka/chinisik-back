@@ -38,7 +38,7 @@ WORKDIR /opt/app
 
 COPY --from=node_modules_prod /opt/app/node_modules node_modules
 COPY --from=dist              /opt/app/dist         dist
-COPY --from=dist              /opt/app/data         data
+COPY                          data                  data
 # Подключается через `-v /путь/к/вашей/static/папке:/opt/app/static`
 # COPY ./static                 static
 
