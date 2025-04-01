@@ -1,6 +1,6 @@
 import { createRoute, z } from '@hono/zod-openapi'
 import AController from '~/api/interfaces/controller.abstract'
-import { LinguisticAnalysisSchema } from '~/models'
+import { LinguisticAnalysisAllSchema } from '~/models'
 
 import { DataListSchema, PageLimitSchema, PageSchema } from '~/models/shared/pagination.schema'
 import { LinguisticAnalysisService } from '~/services'
@@ -31,7 +31,7 @@ class LinguisticAnalysisController extends AController {
         200: {
           content: {
             'application/json': {
-              schema: DataListSchema(LinguisticAnalysisSchema),
+              schema: DataListSchema(LinguisticAnalysisAllSchema),
             },
           },
           description: 'Retrieve list of tests with pagination',
@@ -47,7 +47,7 @@ class LinguisticAnalysisController extends AController {
 
         return c.json(
           {
-            data: z.array(LinguisticAnalysisSchema).parse(data),
+            data: z.array(LinguisticAnalysisAllSchema).parse(data),
             pagination: {
               page,
               limit,
