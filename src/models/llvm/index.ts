@@ -1,3 +1,6 @@
+export * from './hanzi-drawing'
+export * from './hanzi-drawing.schema'
+
 export * from './linguistic-analysis'
 
 export * from './linguistic-analysis.schema'

@@ -1,7 +1,9 @@
 import { createRoute, z } from '@hono/zod-openapi'
+import { HTTPException } from 'hono/http-exception'
 import AController from '~/api/interfaces/controller.abstract'
 import { jwtGuard } from '~/middleware'
 import { LlvmLinguisticAnalysisSchema, ToneTypeSchema } from '~/models'
+import { HanziDrawingSchema } from '~/models/llvm/hanzi-drawing.schema'
 import { PinyinHieroglyphsSchema } from '~/models/llvm/pinyin-hieroglyphs.schema'
 import { SplitedGlyphsSchema } from '~/models/llvm/splited-glyphs.schema'
 import { LlvmService } from '~/services'
@@ -20,6 +22,7 @@ class LlvmController extends AController {
     this.pinyinHieroglyphs()
     this.linguisticAnalysis()
     this.linguisticAnalysisFlat()
+    this.hanziCheck()
   }
 
   private splitGlyphs = () => {
@@ -210,6 +213,79 @@ class LlvmController extends AController {
         const data = await this.service.pinyinHieroglyphs(body)
 
         return c.json(PinyinHieroglyphsSchema.parse(data), 200)
+      },
+    )
+  }
+
+  private hanziCheck = () => {
+    const BodySchema = z.object({
+      userImage: z.string().openapi({
+        description: 'Base64 encoded Data URL of the user drawing (e.g., image/png)',
+        example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+      }),
+
+      targetImage: z.string().optional().openapi({
+        description: 'Base64 encoded Data URL of the target drawing (e.g., image/png)',
+        example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+      }),
+      targetWord: z.string().min(1).max(1).optional().openapi({
+        description: 'The target Chinese character the user was supposed to draw',
+        example: '水',
+      }),
+    })
+
+    const ResponseSchema = HanziDrawingSchema
+
+    const route = createRoute({
+      method: 'post',
+      path: '/hanzi-check',
+      tags: [TAG],
+      summary: 'Check Hanzi Drawing Similarity',
+      description: 'Analyzes a user\'s drawing of a Hanzi character against the target character using AI.',
+      request: {
+        body: {
+          content: {
+            'application/json': {
+              schema: BodySchema,
+            },
+          },
+          required: true,
+        },
+      },
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              schema: ResponseSchema,
+            },
+          },
+          description: 'Analysis result including similarity score and feedback.',
+        },
+      },
+    })
+
+    this.router.openapi(
+      route,
+      async (c) => {
+        const { userImage, targetWord, targetImage } = c.req.valid('json')
+
+        try {
+          const result = await this.service.checkDrawing({ userImage, targetWord, targetImage })
+          const validatedData = ResponseSchema.parse(result)
+
+          return c.json(validatedData, 200)
+        }
+        catch (error: any) {
+          console.error(`[HanziController] Error checking drawing for "${targetWord}":`, error)
+
+          if (error instanceof HTTPException) {
+            throw error
+          }
+
+          throw new HTTPException(500, {
+            message: `Failed to analyze the drawing. ${error.message || ''}`.trim(),
+          })
+        }
       },
     )
   }

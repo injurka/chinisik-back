@@ -6,7 +6,9 @@ const AI_HUBMIX_MODELS = [
   'gemini-2.0-flash-search',
   'gemini-2.0-pro-exp-02-05',
   'gemini-2.0-pro-exp-02-05-search',
+  'gemini-2.5-pro-exp-03-25',
   'Doubao-1.5-lite-32k',
+  'gpt-4o-mini',
   'Doubao-1.5-pro-32k',
   'Doubao-1.5-pro-256k',
 ] as const
@@ -23,6 +25,11 @@ interface AiRequestOptions {
   model?: AiModel
   temperature?: number
   response_format?: { type: 'text' | 'json_object' }
+}
+
+interface AiRequestPrompts {
+  system: string | OpenAI.Chat.Completions.ChatCompletionContentPartText[]
+  user: string | OpenAI.Chat.Completions.ChatCompletionContentPart[]
 }
 
 interface ProviderConfig {
@@ -44,10 +51,7 @@ function validateModel(model: string): model is AiModel {
 }
 
 async function createAiChatRequest(
-  prompt: {
-    system: string
-    user: string
-  },
+  prompt: AiRequestPrompts,
   options?: AiRequestOptions,
 ) {
   const mergedOptions = {
@@ -79,19 +83,25 @@ async function createAiChatRequest(
     stream: false,
     web_search_options: mergedOptions.model.includes('search')
       ? {
-          user_location: {
-            approximate: {
-              city: '北京', // Пекин
-              country: '中国', // Китай
-              region: '北京', // Пекин (регион/провинция)
-              timezone: 'Asia/Shanghai', // Шанхайский часовой пояс (обычно используется для всего Китая)
-            },
-            type: 'approximate',
+        user_location: {
+          approximate: {
+            city: '北京', // Пекин
+            country: '中国', // Китай
+            region: '北京', // Пекин (регион/провинция)
+            timezone: 'Asia/Shanghai', // Шанхайский часовой пояс (обычно используется для всего Китая)
           },
+          type: 'approximate',
+        },
 
-        }
+      }
       : undefined,
   })
 }
 
-export { AI_MODELS, type AiModel, createAiChatRequest }
+export {
+  AI_MODELS,
+  type AiModel,
+  type AiRequestOptions,
+  type AiRequestPrompts,
+  createAiChatRequest,
+}

@@ -24,7 +24,16 @@ interface PinyinHieroglyphsPayload {
   count?: number
 }
 
+interface HanziCheckPayload {
+  userImage: string
+
+  // image or word
+  targetWord?: string
+  targetImage?: string
+}
+
 export type {
+  HanziCheckPayload,
   LinguisticAnalysisFlatPayload,
   LinguisticAnalysisPayload,
   PinyinHieroglyphsPayload,

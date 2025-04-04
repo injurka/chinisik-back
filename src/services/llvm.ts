@@ -2,15 +2,18 @@ import type { InputJsonValue } from '@prisma/client/runtime/library'
 import type { ZodSchema } from 'zod'
 import type { User } from '~/models'
 import type {
+  HanziCheckPayload,
   LinguisticAnalysisFlatPayload,
   LinguisticAnalysisPayload,
   LlvmLinguisticAnalysisSourceType,
   PinyinHieroglyphsPayload,
   SplitGlyphsPayload,
 } from '~/models/llvm'
+import type { AiRequestOptions, AiRequestPrompts } from '~/utils/ai/request'
 import { HTTPException } from 'hono/http-exception'
 import { z } from 'zod'
 import {
+  HanziDrawingSchema,
   LlvmLinguisticAnalysisSchema,
   LlvmLinguisticAnalysisSourceTypeSchema,
   PinyinHieroglyphsSchema,
@@ -20,6 +23,7 @@ import { prisma } from '~/prisma'
 import { logger } from '~/server'
 import { createAiEmbeddingsRequest, loadOrCreateEmbeddings } from '~/utils/ai/embeddings'
 import { createAiChatRequest } from '~/utils/ai/request'
+import { getHanziDrawingAll, getHanziDrawingImageAndImage, getHanziDrawingImageAndText } from '~/utils/promt/hanzi-drawing'
 import {
   getLinguisticAnalysisMdPromt,
   getLinguisticAnalysisPromt,
@@ -308,6 +312,64 @@ class LlvmService {
       content,
       PinyinHieroglyphsSchema,
     )
+  }
+
+  async checkDrawing(params: HanziCheckPayload) {
+    const { userImage, targetWord, targetImage } = params
+
+    // 1. Валидация
+    if (!userImage)
+      throw new Error('Missing required parameter: userImage.')
+    if (!targetWord && !targetImage)
+      throw new Error('Must provide targetWord or targetImage.')
+
+    // 2. Конфигурация для выбора payload getter'а
+    interface PayloadConfig {
+      condition: (p: HanziCheckPayload) => boolean
+      getPayload: (p: HanziCheckPayload) => AiRequestPrompts
+    }
+
+    const payloadConfigs: PayloadConfig[] = [
+      {
+        condition: p => !!p.targetWord && !!p.targetImage,
+        getPayload: p => getHanziDrawingAll({ user: { targetWord: p.targetWord!, targetImage: p.targetImage!, userImage: p.userImage } }),
+      },
+      {
+        condition: p => !!p.targetWord,
+        getPayload: p => getHanziDrawingImageAndText({ user: { targetWord: p.targetWord!, userImage: p.userImage } }),
+      },
+      {
+        condition: p => !!p.targetImage, // Эта ветка будет выбрана, если предыдущие не сработали
+        getPayload: p => getHanziDrawingImageAndImage({ user: { targetImage: p.targetImage!, userImage: p.userImage } }),
+      },
+    ]
+
+    // 3. Находим подходящую конфигурацию и генерируем payload
+    const config = payloadConfigs.find(c => c.condition(params))
+
+    if (!config) {
+      // Эта ситуация не должна возникнуть из-за валидации выше, но для полноты картины
+      throw new Error('Internal error: Could not determine AI payload configuration.')
+    }
+
+    const aiRequestPayload = config.getPayload(params)
+
+    // 4. Общий код для вызова AI и обработки ответа (как в Варианте 1)
+    const aiModelOptions = { model: 'gpt-4o-mini' } satisfies AiRequestOptions
+    const responseSchema = HanziDrawingSchema
+
+    const aiResponse = await createAiChatRequest(aiRequestPayload, aiModelOptions)
+
+    if (!aiResponse?.choices?.[0]?.message?.content) {
+      throw new Error('Invalid AI response structure received.')
+    }
+
+    const processedResponse = await this.processAiResponse(
+      aiResponse.choices[0].message.content,
+      responseSchema,
+    )
+
+    return processedResponse
   }
 }
 
