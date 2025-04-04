@@ -83,17 +83,17 @@ async function createAiChatRequest(
     stream: false,
     web_search_options: mergedOptions.model.includes('search')
       ? {
-        user_location: {
-          approximate: {
-            city: '北京', // Пекин
-            country: '中国', // Китай
-            region: '北京', // Пекин (регион/провинция)
-            timezone: 'Asia/Shanghai', // Шанхайский часовой пояс (обычно используется для всего Китая)
+          user_location: {
+            approximate: {
+              city: '北京', // Пекин
+              country: '中国', // Китай
+              region: '北京', // Пекин (регион/провинция)
+              timezone: 'Asia/Shanghai', // Шанхайский часовой пояс (обычно используется для всего Китая)
+            },
+            type: 'approximate',
           },
-          type: 'approximate',
-        },
 
-      }
+        }
       : undefined,
   })
 }

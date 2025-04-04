@@ -40,7 +40,6 @@ interface Translate {
   freq: number
 }
 
-
 type SplitedGlyphs = (
   SplitGlyphsSentence |
   SplitGlyphsHieroglyph |
