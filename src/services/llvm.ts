@@ -355,7 +355,7 @@ class LlvmService {
     const aiRequestPayload = config.getPayload(params)
 
     // 4. Общий код для вызова AI и обработки ответа (как в Варианте 1)
-    const aiModelOptions = { model: 'gpt-4o-mini' } satisfies AiRequestOptions
+    const aiModelOptions = { model: 'gemini-2.0-flash' } satisfies AiRequestOptions
     const responseSchema = HanziDrawingSchema
 
     const aiResponse = await createAiChatRequest(aiRequestPayload, aiModelOptions)

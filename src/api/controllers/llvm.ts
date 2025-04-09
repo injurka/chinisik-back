@@ -238,7 +238,7 @@ class LlvmController extends AController {
 
     const route = createRoute({
       method: 'post',
-      path: '/hanzi-check',
+      path: `${this.path}/hanzi-check`,
       tags: [TAG],
       summary: 'Check Hanzi Drawing Similarity',
       description: 'Analyzes a user\'s drawing of a Hanzi character against the target character using AI.',
