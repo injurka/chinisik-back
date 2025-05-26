@@ -8,8 +8,11 @@ import type {
   LlvmLinguisticAnalysisSourceType,
   PinyinHieroglyphsPayload,
   SplitGlyphsPayload,
+  TextToSpeechPayload,
 } from '~/models/llvm'
 import type { AiRequestOptions, AiRequestPrompts } from '~/utils/ai/request'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import { HTTPException } from 'hono/http-exception'
 import { z } from 'zod'
 import {
@@ -22,7 +25,8 @@ import {
 import { prisma } from '~/prisma'
 import { logger } from '~/server'
 import { createAiEmbeddingsRequest, loadOrCreateEmbeddings } from '~/utils/ai/embeddings'
-import { createAiChatRequest } from '~/utils/ai/request'
+import { createAiChatRequest, createAiSpeechRequest } from '~/utils/ai/request'
+import { generateDeterministicFilename } from '~/utils/hash'
 import { getHanziDrawingAll, getHanziDrawingImageAndImage, getHanziDrawingImageAndText } from '~/utils/promt/hanzi-drawing'
 import {
   getLinguisticAnalysisMdPromt,
@@ -32,6 +36,8 @@ import {
 import { getPrompt as getPinyinHieroglyphsPromt } from '~/utils/promt/pinyin-hieroglyphs'
 import { getPrompt as getSplitGlyphsPromt } from '~/utils/promt/split-glyphs'
 import { LinguisticAnalysisService } from './linguistic-analysis'
+
+const STATIC_TTS_PATH = path.join(process.cwd(), 'static', 'audio/cn')
 
 interface Item {
   glyph: string
@@ -355,7 +361,7 @@ class LlvmService {
     const aiRequestPayload = config.getPayload(params)
 
     // 4. Общий код для вызова AI и обработки ответа (как в Варианте 1)
-    const aiModelOptions = { model: 'gemini-2.0-flash' } satisfies AiRequestOptions
+    const aiModelOptions = { model: 'gemini-2.5-pro-preview-05-06' } satisfies AiRequestOptions
     const responseSchema = HanziDrawingSchema
 
     const aiResponse = await createAiChatRequest(aiRequestPayload, aiModelOptions)
@@ -370,6 +376,62 @@ class LlvmService {
     )
 
     return processedResponse
+  }
+
+  async textToSpeech(params: TextToSpeechPayload) {
+    const filename = await generateDeterministicFilename(params)
+    const filePath = path.join(STATIC_TTS_PATH, filename)
+    let wasGenerated = false
+
+    try {
+      await fs.access(filePath)
+      logger.info(`TTS file found in cache: ${filePath}`)
+      const fileBuffer = await fs.readFile(filePath)
+      const audioBuffer = fileBuffer.buffer as ArrayBuffer
+
+      return { filePath, audioBuffer, wasGenerated }
+    }
+    catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+        logger.info(`TTS file not found, generating new: ${params.text}`)
+        wasGenerated = true
+        try {
+          const speechResponse = await createAiSpeechRequest({
+            input: params.text,
+            model: params.model || 'gpt-4o-mini-tts',
+            voice: params.voice || 'alloy',
+            response_format: params.response_format || 'mp3',
+            speed: params.speed || 1.0,
+          })
+
+          if (!speechResponse.ok) {
+            const errorBody = await speechResponse.text()
+            logger.error('AI TTS API Error:', { status: speechResponse.status, body: errorBody })
+            throw new HTTPException(speechResponse.status as any, { message: `AI TTS service failed: ${errorBody}` })
+          }
+
+          const audioBuffer = await speechResponse.arrayBuffer()
+
+          await fs.mkdir(STATIC_TTS_PATH, { recursive: true })
+          // eslint-disable-next-line node/prefer-global/buffer
+          await fs.writeFile(filePath, Buffer.from(audioBuffer))
+          logger.info(`TTS file saved: ${filePath}`)
+
+          return { filePath, audioBuffer, wasGenerated }
+        }
+        catch (generationError: any) {
+          logger.error('Error during TTS generation or saving:', generationError)
+          if (generationError instanceof HTTPException) {
+            throw generationError
+          }
+          throw new HTTPException(500, { message: `Failed to generate or save speech: ${generationError.message || 'Unknown error'}` })
+        }
+      }
+      else {
+        logger.error('Error accessing TTS file (not ENOENT):', error)
+        throw new HTTPException(500, { message: `Failed to access speech file: ${(error as Error).message || 'Unknown error'}` })
+      }
+    }
   }
 }
 

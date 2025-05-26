@@ -1,6 +1,6 @@
 import type { ToneType } from '../shared'
 import type { SplitGlyphsType } from './splited-glyphs'
-import type { AiModel } from '~/utils/ai/request'
+import type { AiModel, AiTtsModel } from '~/utils/ai/request'
 
 interface LinguisticAnalysisPayload {
   value: string
@@ -32,10 +32,19 @@ interface HanziCheckPayload {
   targetImage?: string
 }
 
+interface TextToSpeechPayload {
+  text: string
+  model?: AiTtsModel
+  voice?: 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer'
+  response_format?: 'mp3' | 'opus' | 'aac' | 'flac'
+  speed?: number
+}
+
 export type {
   HanziCheckPayload,
   LinguisticAnalysisFlatPayload,
   LinguisticAnalysisPayload,
   PinyinHieroglyphsPayload,
   SplitGlyphsPayload,
+  TextToSpeechPayload,
 }
