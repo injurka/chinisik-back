@@ -3,6 +3,7 @@ import type { ZodSchema } from 'zod'
 import type { User } from '~/models'
 import type {
   HanziCheckPayload,
+  ImageToTextTranslatePayload,
   LinguisticAnalysisFlatPayload,
   LinguisticAnalysisPayload,
   LlvmLinguisticAnalysisSourceType,
@@ -10,13 +11,14 @@ import type {
   SplitGlyphsPayload,
   TextToSpeechPayload,
 } from '~/models/llvm'
-import type { AiRequestOptions, AiRequestPrompts } from '~/utils/ai/request'
+import type { AiChatModel, AiRequestOptions, AiRequestPrompts } from '~/utils/ai/request'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { HTTPException } from 'hono/http-exception'
 import { z } from 'zod'
 import {
   HanziDrawingSchema,
+  ImageTranslationResponseSchema,
   LlvmLinguisticAnalysisSchema,
   LlvmLinguisticAnalysisSourceTypeSchema,
   PinyinHieroglyphsSchema,
@@ -28,6 +30,7 @@ import { createAiEmbeddingsRequest, loadOrCreateEmbeddings } from '~/utils/ai/em
 import { createAiChatRequest, createAiSpeechRequest } from '~/utils/ai/request'
 import { generateDeterministicFilename } from '~/utils/hash'
 import { getHanziDrawingAll, getHanziDrawingImageAndImage, getHanziDrawingImageAndText } from '~/utils/promt/hanzi-drawing'
+import { getOcrPrompt, getTranslatePrompt } from '~/utils/promt/image-to-text-translate'
 import {
   getLinguisticAnalysisMdPromt,
   getLinguisticAnalysisPromt,
@@ -73,9 +76,25 @@ class LlvmService {
   private processAiResponse = async <T>(
     rawData: string | undefined | null,
     schema: ZodSchema<T>,
+    isTextResponse: boolean = false,
   ): Promise<T> => {
     if (!rawData) {
-      throw new Error('Failed to generate content')
+      // For OCR, an empty string might be a valid response if no text is found
+      if (isTextResponse && rawData === '') {
+        return '' as T
+      }
+      throw new Error('Failed to generate content: AI response was empty.')
+    }
+
+    if (isTextResponse) {
+      try {
+        return schema.parse(rawData.trim())
+      }
+      catch (error) {
+        const errorMessage = `Failed to validate text response. ${error}`
+        logger.error(errorMessage, { rawData })
+        throw new HTTPException(400, { message: errorMessage })
+      }
     }
 
     try {
@@ -431,6 +450,74 @@ class LlvmService {
         logger.error('Error accessing TTS file (not ENOENT):', error)
         throw new HTTPException(500, { message: `Failed to access speech file: ${(error as Error).message || 'Unknown error'}` })
       }
+    }
+  }
+
+  async imageToTextTranslate(params: ImageToTextTranslatePayload) {
+    async function fileToDataUrl(file: File): Promise<string> {
+      const arrayBuffer = await file.arrayBuffer()
+      // eslint-disable-next-line node/prefer-global/buffer
+      const buffer = Buffer.from(arrayBuffer)
+      return `data:${file.type};base64,${buffer.toString('base64')}`
+    }
+
+    const { image } = params
+
+    if (!image) {
+      throw new HTTPException(400, { message: 'No image file provided.' })
+    }
+
+    const imageB64 = await fileToDataUrl(image)
+
+    const visionModel: AiChatModel = 'gemini-2.0-flash'
+
+    // Step 1: OCR - Extract Chinese text from image
+    const ocrPrompt = getOcrPrompt({ user: { imageB64 } })
+    let sourceText: string
+    try {
+      const ocrResponse = await createAiChatRequest(ocrPrompt, {
+        model: visionModel,
+        response_format: { type: 'text' },
+      })
+      const ocrContent = ocrResponse.choices[0].message.content?.trim()
+      sourceText = await this.processAiResponse(ocrContent, z.string(), true)
+
+      if (!sourceText) {
+        return ImageTranslationResponseSchema.parse({
+          source: '',
+          translate: '',
+          transcription: '',
+        })
+      }
+    }
+    catch (error: any) {
+      logger.error('OCR processing failed:', error)
+      throw new HTTPException(500, { message: `OCR processing failed: ${error.message}` })
+    }
+
+    const translatePinyinPrompt = getTranslatePrompt({ user: { value: sourceText } })
+    const translationModel: AiChatModel = 'gemini-2.0-flash'
+    try {
+      const translatePinyinResponse = await createAiChatRequest(translatePinyinPrompt, {
+        model: translationModel,
+        response_format: { type: 'json_object' },
+      })
+      const translatePinyinContent = translatePinyinResponse.choices[0].message.content
+
+      const translationData = await this.processAiResponse(
+        translatePinyinContent,
+        z.object({ translate: z.string(), transcription: z.string() }),
+      )
+
+      return ImageTranslationResponseSchema.parse({
+        source: sourceText,
+        translate: translationData.translate,
+        transcription: translationData.transcription,
+      })
+    }
+    catch (error: any) {
+      logger.error('Translation and Pinyin processing failed:', error)
+      throw new HTTPException(500, { message: `Translation and Pinyin processing failed: ${error.message}` })
     }
   }
 }

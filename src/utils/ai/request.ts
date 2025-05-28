@@ -4,6 +4,7 @@ import OpenAI from 'openai'
 const AI_HUBMIX_MODELS_CHAT = [
   'gemini-2.5-pro-preview-05-06',
   'gemini-2.5-pro-preview-03-25',
+  'gemini-2.0-flash',
   'gpt-4o-mini',
 ] as const
 

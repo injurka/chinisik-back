@@ -3,7 +3,7 @@ import { createRoute, z } from '@hono/zod-openapi'
 import { HTTPException } from 'hono/http-exception'
 import AController from '~/api/interfaces/controller.abstract'
 import { jwtGuard } from '~/middleware'
-import { LlvmLinguisticAnalysisSchema, ToneTypeSchema } from '~/models'
+import { ImageTranslationResponseSchema, LlvmLinguisticAnalysisSchema, ToneTypeSchema } from '~/models'
 import { HanziDrawingSchema } from '~/models/llvm/hanzi-drawing.schema'
 import { PinyinHieroglyphsSchema } from '~/models/llvm/pinyin-hieroglyphs.schema'
 import { SplitedGlyphsSchema } from '~/models/llvm/splited-glyphs.schema'
@@ -25,6 +25,7 @@ class LlvmController extends AController {
     this.linguisticAnalysisFlat()
     this.hanziCheck()
     this.textToSpeech()
+    this.imageToTextTranslate()
   }
 
   private splitGlyphs = () => {
@@ -381,6 +382,74 @@ class LlvmController extends AController {
           }
           console.error(`[LlvmController] Error in textToSpeech:`, error)
           throw new HTTPException(500, { message: `Failed to generate speech: ${error.message || 'Unknown error'}` })
+        }
+      },
+    )
+  }
+
+  private imageToTextTranslate = () => {
+    const route = createRoute({
+      method: 'post',
+      path: `${this.path}/image-to-text-translate`,
+      tags: [TAG],
+      summary: 'Extract text from image, translate, and get Pinyin',
+      description: 'Upload an image containing Chinese text. The service will extract the text, translate it to Russian, and provide Pinyin transcription.',
+      security: [{ bearerAuth: [] }],
+      request: {
+        body: {
+          content: {
+            'multipart/form-data': {
+              schema: z.object({
+                image: z.instanceof(File).openapi({ type: 'string', format: 'binary', description: 'Image file containing Chinese text.' }),
+              }),
+            },
+          },
+          required: true,
+        },
+      },
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              schema: ImageTranslationResponseSchema,
+            },
+          },
+          description: 'Successfully processed image and returned text, translation, and Pinyin.',
+        },
+        400: { description: 'Bad Request (e.g., no image provided, invalid image format)' },
+        500: { description: 'Internal Server Error (e.g., AI service error)' },
+      },
+    })
+
+    // TODO
+    // this.router.use(route.path, jwtGuard)
+    this.router.openapi(
+      route,
+      async (c) => {
+        const formData = await c.req.formData()
+        const imageEntry = formData.get('image')
+
+        if (!(imageEntry instanceof File)) {
+          throw new HTTPException(400, { message: 'Image file is required in FormData under the key "image" and must be a file.' })
+        }
+
+        // Теперь TypeScript знает, что imageEntry это File
+        const imageFile = imageEntry as unknown as File
+
+        // Basic validation for image type
+        if (!imageFile.type.startsWith('image/')) {
+          throw new HTTPException(400, { message: 'Uploaded file is not a valid image type.' })
+        }
+
+        try {
+          const result = await this.service.imageToTextTranslate({ image: imageFile })
+          return c.json(result, 200)
+        }
+        catch (error: any) {
+          if (error instanceof HTTPException) {
+            throw error
+          }
+          throw new HTTPException(500, { message: `Failed to process image: ${error.message || 'Unknown error'}` })
         }
       },
     )

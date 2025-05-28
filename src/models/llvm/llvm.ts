@@ -40,8 +40,13 @@ interface TextToSpeechPayload {
   speed?: number
 }
 
+interface ImageToTextTranslatePayload {
+  image: File
+}
+
 export type {
   HanziCheckPayload,
+  ImageToTextTranslatePayload,
   LinguisticAnalysisFlatPayload,
   LinguisticAnalysisPayload,
   PinyinHieroglyphsPayload,
