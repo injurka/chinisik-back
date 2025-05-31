@@ -40,6 +40,11 @@ interface TextToSpeechPayload {
   speed?: number
 }
 
+interface RawPayload {
+  user?: string
+  system?: string
+}
+
 interface ImageToTextTranslatePayload {
   image: File
 }
@@ -50,6 +55,7 @@ export type {
   LinguisticAnalysisFlatPayload,
   LinguisticAnalysisPayload,
   PinyinHieroglyphsPayload,
+  RawPayload,
   SplitGlyphsPayload,
   TextToSpeechPayload,
 }

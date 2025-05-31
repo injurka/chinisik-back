@@ -26,6 +26,7 @@ class LlvmController extends AController {
     this.hanziCheck()
     this.textToSpeech()
     this.imageToTextTranslate()
+    this.raw()
   }
 
   private splitGlyphs = () => {
@@ -451,6 +452,52 @@ class LlvmController extends AController {
           }
           throw new HTTPException(500, { message: `Failed to process image: ${error.message || 'Unknown error'}` })
         }
+      },
+    )
+  }
+
+  private raw = () => {
+    const BodySchema = z.object({
+      system: z.string().optional(),
+      user: z.string().optional(),
+    })
+
+    const route = createRoute({
+      method: 'post',
+      path: `${this.path}/raw`,
+      tags: [TAG],
+      security: [{ bearerAuth: [] }],
+      description: 'Generate AI request from custom user and system prompt.',
+      summary: 'Generate AI request from custom user and system prompt.',
+      request: {
+        body: {
+          content: {
+            'application/json': {
+              schema: BodySchema,
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              schema: z.any(),
+            },
+          },
+          description: 'Raw response.',
+        },
+      },
+    })
+
+    // this.router.use(route.path, jwtGuard)
+    this.router.openapi(
+      route,
+      async (c) => {
+        const body = c.req.valid('json')
+        const data = await this.service.raw(body)
+
+        return c.json(z.any().parse(data), 200)
       },
     )
   }

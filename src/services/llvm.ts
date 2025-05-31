@@ -8,6 +8,7 @@ import type {
   LinguisticAnalysisPayload,
   LlvmLinguisticAnalysisSourceType,
   PinyinHieroglyphsPayload,
+  RawPayload,
   SplitGlyphsPayload,
   TextToSpeechPayload,
 } from '~/models/llvm'
@@ -519,6 +520,17 @@ class LlvmService {
       logger.error('Translation and Pinyin processing failed:', error)
       throw new HTTPException(500, { message: `Translation and Pinyin processing failed: ${error.message}` })
     }
+  }
+
+  async raw(params: RawPayload) {
+    const { system = '', user = '' } = params
+    const response = await createAiChatRequest({ system, user }, { model: 'gemini-2.0-flash', response_format: { type: 'text' } })
+    const rawData = response.choices[0].message.content?.trim()
+
+    if (!rawData)
+      throw new Error('_', { cause: 'Failed to generate content.' })
+
+    return rawData
   }
 }
 
