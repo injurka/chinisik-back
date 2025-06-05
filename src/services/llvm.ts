@@ -524,7 +524,10 @@ class LlvmService {
 
   async raw(params: RawPayload) {
     const { system = '', user = '' } = params
-    const response = await createAiChatRequest({ system, user }, { model: 'gemini-2.0-flash', response_format: { type: 'text' } })
+    const response = await createAiChatRequest(
+      { system, user },
+      { model: 'gemini-2.0-flash', response_format: { type: params.responseType } },
+    )
     const rawData = response.choices[0].message.content?.trim()
 
     if (!rawData)

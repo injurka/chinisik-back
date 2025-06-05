@@ -460,6 +460,7 @@ class LlvmController extends AController {
     const BodySchema = z.object({
       system: z.string().optional(),
       user: z.string().optional(),
+      responseType: z.enum(['text', 'json_object']).optional().default('text'),
     })
 
     const route = createRoute({

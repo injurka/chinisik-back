@@ -43,6 +43,7 @@ interface TextToSpeechPayload {
 interface RawPayload {
   user?: string
   system?: string
+  responseType: 'text' | 'json_object'
 }
 
 interface ImageToTextTranslatePayload {
