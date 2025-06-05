@@ -5,6 +5,7 @@ import AController from '~/api/interfaces/controller.abstract'
 import { jwtGuard } from '~/middleware'
 import { ImageTranslationResponseSchema, LlvmLinguisticAnalysisSchema, ToneTypeSchema } from '~/models'
 import { HanziDrawingSchema } from '~/models/llvm/hanzi-drawing.schema'
+import { ChatCompletionContentPartSchema } from '~/models/llvm/open-ai.schema'
 import { PinyinHieroglyphsSchema } from '~/models/llvm/pinyin-hieroglyphs.schema'
 import { SplitedGlyphsSchema } from '~/models/llvm/splited-glyphs.schema'
 import { LlvmService } from '~/services'
@@ -458,8 +459,12 @@ class LlvmController extends AController {
 
   private raw = () => {
     const BodySchema = z.object({
-      system: z.string().optional(),
-      user: z.string().optional(),
+      system: z
+        .union([z.string(), z.array(ChatCompletionContentPartSchema)])
+        .optional(),
+      user: z
+        .union([z.string(), z.array(ChatCompletionContentPartSchema)])
+        .optional(),
       responseType: z.enum(['text', 'json_object']).optional().default('text'),
     })
 
