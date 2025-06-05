@@ -460,10 +460,18 @@ class LlvmController extends AController {
   private raw = () => {
     const BodySchema = z.object({
       system: z
-        .union([z.string(), z.array(ChatCompletionContentPartSchema)])
+        .union([
+          z.string(),
+          ChatCompletionContentPartSchema,
+          z.array(ChatCompletionContentPartSchema),
+        ])
         .optional(),
       user: z
-        .union([z.string(), z.array(ChatCompletionContentPartSchema)])
+        .union([
+          z.string(),
+          ChatCompletionContentPartSchema,
+          z.array(ChatCompletionContentPartSchema),
+        ])
         .optional(),
       responseType: z.enum(['text', 'json_object']).optional().default('text'),
     })
